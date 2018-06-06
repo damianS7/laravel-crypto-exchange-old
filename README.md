@@ -1,2 +1,2 @@
 # BitEx
-Bitcoin Exchange
+Bitcoin Exchange / BitEx
