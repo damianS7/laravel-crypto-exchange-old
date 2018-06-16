@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Models\Pair;
 
 class PairsController extends Controller
 {
@@ -19,6 +20,7 @@ class PairsController extends Controller
 
     public function index()
     {
-        return view('admin/coins');
+        $pairs = Pair::paginate(5);
+        return view('admin/pairs')->with('pairs', $pairs);
     }
 }

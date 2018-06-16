@@ -18,11 +18,9 @@ class AccountsController extends Controller
         $this->middleware('auth-admin');
     }
 
-
     public function saveSettings() {
 
     }
-
 
     /**
      * Show the application dashboard.
@@ -31,7 +29,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $settings = Account::all();
-        return view('admin/accounts')->with('accounts', $settings);
+        $accounts = Account::paginate(5);
+        return view('admin/accounts')->with('accounts', $accounts);
     }
 }

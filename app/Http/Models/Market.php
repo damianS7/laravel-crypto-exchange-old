@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Http\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 // Borrar coins, este es el modelo bueno
-class Coin extends Model
+class Market extends Model
 {
     use Notifiable;
     public $timestamps = false;

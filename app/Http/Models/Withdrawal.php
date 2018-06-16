@@ -1,10 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Withdrawals extends Model
+class Withdrawal extends Model
 {
-    protected $table = "Withdrawals";
+    public $timestamps = false;
+
 }
