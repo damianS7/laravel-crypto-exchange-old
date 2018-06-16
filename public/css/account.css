@@ -1,0 +1,16 @@
+.account-content {
+    min-height: 600px;
+    padding: 0 5px 0 5px;
+}
+.search-scroll {
+    background-color: lightblue;
+    height: 210px;
+    overflow-y: scroll;
+}
+
+#search_coin, .qqq .list-group-item{
+    border-radius: 0;
+}
+.search-scroll img {
+    width: 20px
+}

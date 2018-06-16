@@ -1,0 +1,27 @@
+.section1, .section2, .section3, .section4{
+    width: 100%;
+    text-align: center;
+    overflow-x: hidden;
+
+    height: 596px;
+    position: relative;
+}
+.section2, .section4{
+    /*background: url("/bitex/resources/images/bitex.svg") center no-repeat #0b3e69;*/
+    background-color: #007bff;
+}
+
+.section1, .section3{
+    background-color: #f8f9fa;
+}
+
+.footer {
+
+    background-color: #262d33;
+
+    width: 100%;
+    text-align: center;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

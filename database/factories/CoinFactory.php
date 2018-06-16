@@ -13,10 +13,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\Coin::class, function (Faker $faker) {
     return [
-        'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => str_random(10),
+        'symbol' => str_random(4),
+        'name' => $faker->name,
+        'min_deposit' => $faker->randomFloat(8, 0, 100),
+        'min_withdrawal' => $faker->randomFloat(8, 0, 100),
+        'fee_withdrawal' => $faker->randomFloat(8, 0, 100)
     ];
 });

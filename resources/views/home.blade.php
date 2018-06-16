@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="navbar-nav ml-md-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('exchange') }}">Markets</a>
+                    <a class="nav-link" href="{{ route('trade') }}">Markets</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('register') }}">Sign Up</a>
