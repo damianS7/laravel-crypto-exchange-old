@@ -6,15 +6,6 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="navbar-nav ml-md-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">BTC/USD</a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                    <?php //$pairMenu->print(); ?>
-                </div>
-            </li>
-        </ul>
-
-        <ul class="navbar-nav ml-md-auto">
             @if (Auth::check())
               <li class="nav-item active">
                   <a class="nav-link" href="{{ route('account') }}">Account</a>

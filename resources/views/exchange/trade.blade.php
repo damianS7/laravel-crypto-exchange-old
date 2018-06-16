@@ -38,8 +38,7 @@
 
                 <div class="row">
                     <div id="user-orders" class="col-sm-12">
-                        include('exchange.userOrders')
-                        {{$data}}
+                        @include('exchange.userOrders')
                     </div>
                 </div>
             </div>
@@ -47,14 +46,14 @@
             <div id="col-right" class="col-sm-5">
                 <div class="row">
                     <div id="order-book" class="col-sm-6">
-                        include('exchange.orderBook')
+                        @include('exchange.orderBook')
                     </div>
                     <div id="order-history" class="col-sm-6">
-                        include('exchange.orderHistory')
+                        @include('exchange.orderHistory')
                     </div>
                 </div>
                 <div id="buy-sell-widget" class="row">
-                    include('exchange.orderForm')
+                    @include('exchange.orderForm')
                 </div>
             </div>
         </div>

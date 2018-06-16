@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PairsController extends Controller
+class ScriptsController extends Controller
 {
     /**
      * Create a new controller instance.

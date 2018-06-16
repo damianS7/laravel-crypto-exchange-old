@@ -16,19 +16,19 @@
 <div id="order-book-sells" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            <?php foreach ($buyOrders as $order): ?>
+            @foreach ($orders as $order)
                 <?php for ($i=0; $i < 50; $i++): ?>
                     <tr class="selltext">
                         <td class="text-left">
-                            <span class="clickable" onClick="setPriceOrder('<?php echo $order['price']; ?>')"><?php echo $order['price']; ?></span>
+                            <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
                         </td>
                         <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('<?php echo $order['amount']; ?>')"><?php echo $order['amount']; ?></span>
+                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->price }}</span>
                         </td>
-                        <td class="text-right"><?php echo $order['price']; ?></td>
+                        <td class="text-right">{{ $order->price }}</td>
                     </tr>
                 <?php endfor; ?>
-            <?php endforeach; ?>
+            @endforeach
         </tbody>
     </table>
 </div>
@@ -36,20 +36,19 @@
 <div id="order-book-buys" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            <?php foreach ($sellOrders as $order): ?>
+            @foreach ($orders as $order)
                 <?php for ($i=0; $i < 50; $i++): ?>
-                    <tr class="buytext">
+                    <tr class="selltext">
                         <td class="text-left">
-                            <span class="clickable" onClick="setPriceOrder('<?php echo $order['price']; ?>')"><?php echo $order['price']; ?></span>
+                            <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
                         </td>
-
                         <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('<?php echo $order['amount']; ?>')"><?php echo $order['amount']; ?></span>
+                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->price }}</span>
                         </td>
-                        <td class="text-right"><?php echo $order['price']; ?></td>
+                        <td class="text-right">{{ $order->price }}</td>
                     </tr>
                 <?php endfor; ?>
-            <?php endforeach; ?>
+            @endforeach
         </tbody>
     </table>
 </div>

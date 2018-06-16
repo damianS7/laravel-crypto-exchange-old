@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Models\Account\Deposits;
-use App\Http\Models\Coins;
+use App\Http\Models\Account\Deposit;
+use App\Http\Models\Coin;
 
 class DepositsController extends Controller
 {
@@ -42,8 +42,9 @@ class DepositsController extends Controller
     public function index()
     {
         $coins = Coins::all();
+        $id = 1;
         //$deposits = Deposits::where('user_id', 1)->get();
-        $deposits = Deposits::where('user_id', 1)->paginate(3);
+        $deposits = Deposit::where('user_id', $id)->paginate(3);
 
         return view('account/deposits',
         array(

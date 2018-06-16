@@ -23,7 +23,7 @@ Route::get('/admin/', function () {
 
 // Exchange
 Route::redirect('/trade/', '/trade/BTC-USDT', 301);
-Route::get('/trade/{pair?}', 'Trading\PairController@index')->name('trade');
+Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
 //Route::get('/trade/{pair?}', function ($pair) {
     // Pasar el pair al controlador para su filtrado
     // Pasar coins markets balances etc a la vista
@@ -39,6 +39,10 @@ Route::get('/admin/accounts', 'Admin\AccountsController@index')->name('admin-acc
 Route::get('/admin/settings/', 'Admin\SettingsController@index')->name('admin-settings');
 Route::post('/admin/settings/', 'Admin\SettingsController@save')->name('admin-save-settings');
 Route::get('/admin/coins', 'Admin\CoinsController@index')->name('admin-coins');
+
+Route::get('/admin/pairs', 'Admin\PairsController@index')->name('admin-pairs');
+Route::get('/admin/markets', 'Admin\MarketsController@index')->name('admin-markets');
+Route::get('/admin/withdrawals', 'Admin\WithdrawalsController@index')->name('admin-withdrawals');
 
 // Account routes
 Route::get('/account/', 'Account\OverviewController@index')->name('account');
