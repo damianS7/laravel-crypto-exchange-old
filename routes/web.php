@@ -24,6 +24,7 @@ Route::get('/admin/', function () {
 // Exchange
 Route::redirect('/trade/', '/trade/BTC-USDT', 301);
 Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
+Route::get('/trade/', 'TradeController@changeTheme')->name('change-theme');
 //Route::get('/trade/{pair?}', function ($pair) {
     // Pasar el pair al controlador para su filtrado
     // Pasar coins markets balances etc a la vista
