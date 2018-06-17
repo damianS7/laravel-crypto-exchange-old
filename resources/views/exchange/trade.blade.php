@@ -33,6 +33,20 @@
                 <div class="row">
                     <div id="graph" class="col-sm-12">
                         include('exchange.priceHistory')
+
+
+                        <p>Setting buyfee {{ @$settings['buy_fee']->value }}</p>
+                        <p>Market id 1 {{ @$markets['BTC']->symbol }}</p>
+                        <p>Pairs:{{ count( @$markets['BTC']->getPairs() ) }}</p>
+                        @foreach ($markets as $market)
+                            <p>Market: {{ $market->symbol }}</p>
+                            <p>Pairs: {{ count($market->getPairs()) }}</p>
+                            @foreach ($market->getPairs() as $pair)
+                                <p>Pair: {{ $pair->symbol }}</p>
+                            @endforeach
+                        @endforeach
+
+
                     </div>
                 </div>
 
