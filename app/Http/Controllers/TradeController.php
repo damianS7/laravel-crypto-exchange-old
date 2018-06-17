@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Setting;
 use App\Http\Models\Market;
 use App\Http\Models\Order;
+use App\Http\Models\Pair;
 
 class TradeController extends Controller
 {
@@ -30,50 +31,43 @@ class TradeController extends Controller
 		return redirect ('trade');
 	}
 
+	private function pairExists() {
+		//$search = Pair::find();
+		//if exists return true else false
+	}
+
 
 	public function index()
 	{
-
-		// set this as service or only for exchange view
-		if(empty(Cookie::get('theme'))) {
+		// Check if cookie theme is set
+		if( empty(Cookie::get('theme')) ) {
 			// set cookie for color theme
 			Cookie::queue('theme', 'light', 60*24*4);
 		}
-		//$settings = Setting::all()->keyBy('name');
 
-		//$orderHistory
-		//$openOrders
-		//$pairs
+		// Check the trading pair selected
+		// redirect if not exists
 
-		//$markets = Market::select('*')
-		//->join('coins', 'coin2_id', '=', 'coins.id');
-		//->keyBy('market_name');
+		// Needed settings
+		$settings = Setting::all()->keyBy('name');
 
-		//$markets = Market::all()->keyBy('market_name');
-		//foreach ($markets as $market) {
-		//$pairs = Pair::where('market_id', $market->id);
-		//}
+		// Trade markets (which constains also pairs)
+		$markets = Market::select('markets.*', 'coins.symbol')
+			->join('coins', 'markets.coin_id', '=', 'coins.id')
+			->get()->keyBy('symbol');
 
+		// User trade history for the actual coin he is trading
+		$userHistory = Setting::all();
 
+		// Market history for the actual pair user is trading
+		$marketHistory = Setting::all();
 
-		$settings = Setting::all();
-		$markets = Market::all();
-		$tradeHistory = Setting::all();
-		$orderHistory = Setting::all();
-		$orders = Order::all();
+		// Book of open orders for the actual pair
+		$bookOrder = Order::all();
 
-		$data = array(
-			'settings' => $settings, // markets and its pairs
-			'markets' => $markets, // markets and its pairs
-			'tradeHistory' => $tradeHistory, // real time buy sells
-			'orderHistory' => $orderHistory, // user order history
-			'orders' => $orders, // buy sell orders
-		);
+		$names = array('settings', 'bookOrder', 'marketHistory',
+			'markets', 'userHistory');
 
-		//return view('exchange/trade')->with('data', $data);
-
-		$names = array('settings', 'orders', 'tradeHistory',
-		'markets', 'orderHistory');
 		return view('exchange/trade')->with(compact($names));
 	}
 
