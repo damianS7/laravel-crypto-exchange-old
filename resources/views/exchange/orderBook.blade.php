@@ -16,7 +16,7 @@
 <div id="order-book-sells" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            @foreach ($orders as $order)
+            @foreach ($bookOrder as $order)
                 <?php for ($i=0; $i < 50; $i++): ?>
                     <tr class="selltext">
                         <td class="text-left">
@@ -36,7 +36,7 @@
 <div id="order-book-buys" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            @foreach ($orders as $order)
+            @foreach ($bookOrder as $order)
                 <?php for ($i=0; $i < 50; $i++): ?>
                     <tr class="selltext">
                         <td class="text-left">

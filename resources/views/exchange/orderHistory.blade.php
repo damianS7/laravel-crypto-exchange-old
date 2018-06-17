@@ -16,7 +16,7 @@
 <div id="" class="table-responsive">
 	<table class="table table-borderless">
 		<tbody>
-			<?php foreach ($tradeHistory as $order): ?>
+			<?php foreach ($marketHistory as $order): ?>
 				<?php for ($i=0; $i < 50; $i++): ?>
 
                     <?php if($order['type'] == "buy"): ?>
