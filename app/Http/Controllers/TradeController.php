@@ -47,6 +47,7 @@ class TradeController extends Controller
 
 		// Check the trading pair selected
 		// redirect if not exists
+		// return redirect()
 
 		// Needed settings
 		$settings = Setting::all()->keyBy('name');
