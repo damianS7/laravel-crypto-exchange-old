@@ -66,6 +66,7 @@ class TradeController extends Controller
 		// Book of open orders for the actual pair
 		$bookOrder = Order::all();
 
+		// Array names
 		$names = array('settings', 'bookOrder', 'marketHistory', 'markets', 'userHistory');
 
 		return view('exchange/trade')->with(compact($names));
