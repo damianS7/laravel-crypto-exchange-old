@@ -33,11 +33,11 @@
 
 			@if (Cookie::get('theme') == 'light')
 			<li class="nav-item">
-				<a class="nav-link" href="{{ route('change-theme', '') }}">Light</a>
+				<a class="nav-link" href="{{ route('change-theme', '') }}">Dark</a>
 			</li>
 			@else
 			<li class="nav-item">
-				<a class="nav-link" href="{{ route('change-theme', '') }}">Dark</a>
+				<a class="nav-link" href="{{ route('change-theme', '') }}">Light</a>
 			</li>
 			@endif
 
