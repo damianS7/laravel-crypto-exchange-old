@@ -2,11 +2,12 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#markets').addClass('active');
-    });
-    $('.confirm').click(function (e) {
-        if (!confirm('Are you sure?')) {
-            e.preventDefault();
-        }
+
+        $('.confirm').click(function (e) {
+            if (!confirm('Are you sure?')) {
+                e.preventDefault();
+            }
+        });
     });
 </script>
 @endsection
@@ -58,7 +59,7 @@
                         <form action="{{ route('markets.destroy', $market) }}" method="post">
                             {{ csrf_field() }}
                             <input type="hidden" name="_method" value="delete">
-                            <button type="submit" name="submit" value="delete" class="btn btn-sm btn-success">Delete</button>
+                            <button type="submit" name="submit" value="delete" class="btn btn-sm btn-success confirm">Delete</button>
                         </form>
                     </td>
             </tr>

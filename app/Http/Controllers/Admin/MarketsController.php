@@ -64,7 +64,7 @@ class MarketsController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             \Session::flash('error', 'Market not added');
         }
-        return redirect ('admin/markets/');
+        return redirect ('admin/markets');
     }
 
     /**

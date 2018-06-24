@@ -37,11 +37,11 @@
         <tbody>
             @foreach ($markets as $market)
             <tr class="">
-                <td name="coin">
-                    <a href="{{ route('markets.edit', $market->id) }}">{{ $market['symbol'] }}</a>
+                <td>
+                    <a href="{{ route('markets.edit', $market->id) }}">{{ $market->symbol }}</a>
                 </td>
-                <td name="market_status">
-                    @if ($market['market_open'])
+                <td>
+                    @if ($market->market_open)
                         <span class="badge badge-success">Open</span>
                     @else
                         <span class="badge badge-danger">Closed</span>
