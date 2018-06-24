@@ -34,6 +34,7 @@
 		</div>
 	</div>
 	<button type="submit" onClick="setOrder('buy')" class="btn btn-success btn-block">BUY</button>
+	<p>Setting buyfee {{ @$settings['buy_fee']->value }}</p>
 </div>
 
 <div class="col-sm-6">

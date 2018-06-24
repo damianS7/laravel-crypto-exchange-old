@@ -4,7 +4,7 @@
 @section('javascript')
 <script type="text/javascript">
 $( document ).ready(function() {
-    $('#markets').addClass('active');
+    $('#pairs').addClass('active');
 });
 </script>
 @endsection
@@ -28,5 +28,7 @@ $( document ).ready(function() {
     {{ Session('error') }}
 </div>
 @endif
+
+
 
 @endsection

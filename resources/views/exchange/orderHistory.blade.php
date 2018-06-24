@@ -1,8 +1,8 @@
 <table class="table table-borderless" style="margin:0">
     <colgroup>
-        <col style="width: 33%">
-        <col style="width: 33%">
-        <col style="width: 33%">
+        <col style="width: 30%">
+        <col style="width: 30%">
+        <col style="width: 40%">
     </colgroup>
     <tbody>
         <tr>
@@ -12,13 +12,11 @@
         </tr>
     </tbody>
 </table>
-
 <div id="" class="table-responsive">
 	<table class="table table-borderless">
 		<tbody>
 			<?php foreach ($marketHistory as $order): ?>
 				<?php for ($i=0; $i < 50; $i++): ?>
-
                     <?php if($order['type'] == "buy"): ?>
                         <tr>
                             <td class="text-left" style="color:#8ec919"><?php echo $order['price']; ?></td>

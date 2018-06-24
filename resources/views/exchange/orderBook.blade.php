@@ -16,18 +16,18 @@
 <div id="order-book-sells" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            @foreach ($bookOrder as $order)
-                <?php for ($i=0; $i < 50; $i++): ?>
+            @foreach ($sellOrders as $order)
                     <tr class="selltext">
                         <td class="text-left">
                             <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
                         </td>
                         <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->price }}</span>
+                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
                         </td>
-                        <td class="text-right">{{ $order->price }}</td>
+                        <td class="text-right">
+                            {{ $order->total }}
+                        </td>
                     </tr>
-                <?php endfor; ?>
             @endforeach
         </tbody>
     </table>
@@ -36,18 +36,16 @@
 <div id="order-book-buys" class="table-responsive">
     <table  class="table table-borderless table-striped">
         <tbody>
-            @foreach ($bookOrder as $order)
-                <?php for ($i=0; $i < 50; $i++): ?>
-                    <tr class="selltext">
+            @foreach ($buyOrders as $order)
+                    <tr class="buytext">
                         <td class="text-left">
                             <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
                         </td>
                         <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->price }}</span>
+                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
                         </td>
-                        <td class="text-right">{{ $order->price }}</td>
+                        <td class="text-right">{{ $order->total }}</td>
                     </tr>
-                <?php endfor; ?>
             @endforeach
         </tbody>
     </table>

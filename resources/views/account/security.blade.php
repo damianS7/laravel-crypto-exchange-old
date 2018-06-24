@@ -10,5 +10,9 @@ $( document ).ready(function() {
 @endsection
 
 @section('content')
-security
+Please enable 2FA
+QR CODE
+CODE TEXT
+Enter 2FA to activate
+<button>SAVE</button>
 @endsection

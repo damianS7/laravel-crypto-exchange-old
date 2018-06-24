@@ -14,7 +14,7 @@
 Route::get('/', 'HomeController@index')->name('home');
 
 // Exchange
-Route::get('/trade/changeTheme{theme?}', 'TradeController@changeTheme')->name('change-theme');
+Route::get('/trade/theme{theme?}', 'TradeController@changeTheme')->name('change-theme');
 Route::redirect('/trade/', '/trade/BTC-USDT', 302);
 Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
 
@@ -22,11 +22,15 @@ Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
 Route::get('/admin/', 'Admin\SettingsController@index')->name('admin');
 Route::redirect('/admin/', '/admin/settings/', 302);
 Route::get('/admin/accounts', 'Admin\AccountsController@index')->name('admin-accounts');
+
+// Admin settings
 Route::get('/admin/settings/', 'Admin\SettingsController@index')->name('admin-settings');
 Route::post('/admin/settings/', 'Admin\SettingsController@save')->name('admin-save-settings');
-Route::get('/admin/coins', 'Admin\CoinsController@index')->name('admin-coins');
-Route::get('/admin/pairs', 'Admin\PairsController@index')->name('admin-pairs');
-Route::get('/admin/markets', 'Admin\MarketsController@index')->name('admin-markets');
+
+Route::resource('/admin/pairs', 'Admin\PairsController');
+Route::resource('/admin/coins', 'Admin\CoinsController');
+Route::resource('/admin/markets', 'Admin\MarketsController');
+
 Route::get('/admin/withdrawals', 'Admin\WithdrawalsController@index')->name('admin-withdrawals');
 
 // Account routes

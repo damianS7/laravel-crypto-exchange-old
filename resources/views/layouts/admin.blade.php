@@ -58,9 +58,9 @@
                 <div class="list-group" id="menu-list">
                     <a class="list-group-item list-group-item-action" id="settings" href="{{ route('admin-settings') }}">Settings</a>
                     <a class="list-group-item list-group-item-action" id="accounts" href="{{ route('admin-accounts') }}">Accounts</a>
-                    <a class="list-group-item list-group-item-action" id="coins" href="{{ route('admin-coins') }}">Coins</a>
-                    <a class="list-group-item list-group-item-action" id="markets" href="{{ route('admin-markets') }}">Markets</a>
-                    <a class="list-group-item list-group-item-action" id="pairs" href="{{ route('admin-pairs') }}">Pairs</a>
+                    <a class="list-group-item list-group-item-action" id="coins" href="{{ route('coins.index') }}">Coins</a>
+                    <a class="list-group-item list-group-item-action" id="markets" href="{{ route('markets.index') }}">Markets</a>
+                    <a class="list-group-item list-group-item-action" id="pairs" href="{{ route('pairs.index') }}">Pairs</a>
                     <a class="list-group-item list-group-item-action" id="withdrawals" href="{{ route('admin-withdrawals') }}">Pending Withdrawls</a>
                     <a class="list-group-item list-group-item-action" id="security" href="security.php">Maintenance</a>
                     <a class="list-group-item list-group-item-action" id="verification" href="verification.php">Verification</a>
