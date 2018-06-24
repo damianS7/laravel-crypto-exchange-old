@@ -1,0 +1,85 @@
+#price-history {
+    background-color: coral;
+    min-height: 550px;
+    max-height: 550px;
+}
+#col-right, #col-center, #col-right {
+    min-height: 200px;
+}
+
+#col-right {
+
+}
+
+#col-left {
+
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+#tradingview_3ebbc {
+    height: 400px
+}
+
+#order-book,
+#order-history {
+    height: 550px;
+}
+
+#order-history > div{
+    height: 100%;
+    overflow-y: scroll;
+}
+
+#order-book .table {
+    margin-bottom: 0;
+}
+
+#order-book .table td,
+#order-book .table th ,
+#order-history .table td,
+#order-history .table th{
+    
+}
+
+#order-book .table,
+#order-history .table {
+    font-size: 0.65em;
+}
+
+#order-book .table td,
+#order-history .table td{
+    padding: 0;
+}
+
+#order-book-buys,
+#order-book-sells {
+    height: 50%;
+    overflow-y: scroll;
+}
+
+#buy-sell-widget {
+    margin-top:28px
+}
+
+#pairs .table td,
+#pairs .table th {
+    padding: 0;
+    width: 25%;
+}
+
+#search-scroll {
+    background-color: lightblue;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+#pairs{
+    width: 600px;
+}
+
+#ppp{
+    margin: 0;
+}
