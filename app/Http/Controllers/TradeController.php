@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
@@ -72,7 +73,7 @@ class TradeController extends Controller
 		{
 			// User trade history for the actual coin he is trading
 			$userHistory = OrderHistory::where('user_id', Auth::user()->id)
-			->where('pair_id', $tradingPair->id)->get();
+				->where('pair_id', $tradingPair->id)->get();
 		} else {
 			$userHistory = array();
 		}
@@ -81,10 +82,24 @@ class TradeController extends Controller
 		$marketHistory = OrderHistory::where('pair_id', $tradingPair->id)->get();
 
 		// Book of open orders for the actual pair
-		$bookOrder = Order::where('pair_id', $tradingPair->id)->get();
+		/*
+		SELECT oo.price,
+		SUM(oo.amount) as 'amount',
+		ROUND(SUM(oo.amount)*oo.price, 8) as 'total'
+		FROM `open_orders` oo
+		WHERE pair_id = 5 AND type='buy'
+		GROUP BY price
+		ORDER BY price DESC
+		*/
+		$buyOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $tradingPair->id)->where('type', 'buy')->groupBy('price')->orderBy('price', 'DESC')->get();
+
+
+		$sellOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $tradingPair->id)->where('type', 'sell')->groupBy('price')->orderBy('price', 'DESC')->get();
+
+		//$bookOrder = array('buys' => $buyOrders, 'sells' => $sellOrders);
 
 		// Array names
-		$names = array('settings', 'bookOrder', 'marketHistory', 'markets', 'userHistory', 'pair');
+		$names = array('settings', 'marketHistory', 'markets', 'userHistory', 'pair', 'sellOrders', 'buyOrders');
 
 		return view('exchange/trade')->with(compact($names));
 	}

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BitEx | @yield('title') {{ $pair }} </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/bitex/resources/css/account.css">
+    <link href="{{ asset('css/common.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/exchange.css') }}" rel="stylesheet">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -31,27 +32,13 @@
     <div id="main-menu">
         @include('exchange.menu')
     </div>
-    <p>&nbsp;</p>
+    <!-- <p>&nbsp;</p> -->
     <div class="container-fluid">
         <div class="row">
             <div id="col-left" class="col-sm-7">
                 <div class="row">
-                    <div id="graph" class="col-sm-12">
+                    <div id="price-history" class="col-sm-12">
                         include('exchange.priceHistory')
-
-
-                        <p>Setting buyfee {{ @$settings['buy_fee']->value }}</p>
-                        <p>Market id 1 {{ @$markets['BTC']->symbol }}</p>
-                        <p>Pairs:{{ count( @$markets['BTC']->getPairs() ) }}</p>
-                        @foreach ($markets as $market)
-                            <p>Market: {{ $market->symbol }}</p>
-                            <p>Pairs: {{ count($market->getPairs()) }}</p>
-                            @foreach ($market->getPairs() as $pair)
-                                <p>Pair: {{ $pair->symbol }}</p>
-                            @endforeach
-                        @endforeach
-
-
                     </div>
                 </div>
 
