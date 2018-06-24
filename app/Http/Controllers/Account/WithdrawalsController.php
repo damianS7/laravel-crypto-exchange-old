@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Account;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Models\Withdrawal;
 use Illuminate\Http\Request;
+
 
 class WithdrawalsController extends Controller
 {

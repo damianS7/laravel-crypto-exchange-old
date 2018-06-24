@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Account;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Models\Account\Deposit;
+use App\Http\Models\Deposit;
 use App\Http\Models\Coin;
 
 class DepositsController extends Controller
@@ -41,10 +42,10 @@ class DepositsController extends Controller
      */
     public function index()
     {
-        $coins = Coins::all();
-        $id = 1;
+        $coins = Coin::all();
+        $userId = Auth::user()->id;
         //$deposits = Deposits::where('user_id', 1)->get();
-        $deposits = Deposit::where('user_id', $id)->paginate(3);
+        $deposits = Deposit::where('user_id', $userId)->paginate(3);
 
         return view('account/deposits',
         array(
