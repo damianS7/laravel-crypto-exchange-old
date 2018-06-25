@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateOrderHistoryTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateOrderHistoryTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('pair_id');
             $table->decimal('price', 15, 8);
-            $table->decimal('amount',22, 8);
+            $table->decimal('amount', 22, 8);
             $table->enum('type', ['buy', 'sell']);
             $table->timestamp('date');
 

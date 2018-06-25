@@ -1,14 +1,15 @@
 <?php
 
-use Faker\Generator as Faker;
-use App\User;
 use App\Http\Models\Coin;
-use App\Http\Models\Market;
-use App\Http\Models\Pair;
-use App\Http\Models\Wallet;
 use App\Http\Models\Deposit;
+use App\Http\Models\Market;
 use App\Http\Models\Order;
 use App\Http\Models\OrderHistory;
+use App\Http\Models\Pair;
+use App\Http\Models\Wallet;
+use App\User;
+use Faker\Generator as Faker;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -18,7 +19,7 @@ use App\Http\Models\OrderHistory;
 | your application. Factories provide a convenient way to generate new
 | model instances for testing / seeding your application's database.
 |
-*/
+ */
 
 $factory->define(App\User::class, function (Faker $faker) {
     return [
@@ -35,7 +36,7 @@ $factory->define(Coin::class, function (Faker $faker) {
         'name' => $faker->name,
         'min_deposit' => $faker->randomFloat(8, 0, 1000),
         'min_withdrawal' => $faker->randomFloat(8, 0, 1000),
-        'fee_withdrawal' => $faker->randomFloat(8, 0, 1000)
+        'fee_withdrawal' => $faker->randomFloat(8, 0, 1000),
     ];
 });
 
@@ -66,8 +67,8 @@ $factory->define(Deposit::class, function (Faker $faker) {
         'coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
         'wallet_id' => $faker->randomElement(Wallet::pluck('id')->toArray()),
         'amount' => $faker->randomFloat(8, 0, 10000),
-        'tx' =>  str_random(64),
-        'date' => date('Y-m-d H:i:s', rand(1260099000, 1600000000))
+        'tx' => str_random(64),
+        'date' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
     ];
 });
 
@@ -78,7 +79,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'price' => $faker->randomFloat(8, 0, 10000),
         'amount' => $faker->randomFloat(8, 0, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
-        'created_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000))
+        'created_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
     ];
 });
 
@@ -89,6 +90,6 @@ $factory->define(OrderHistory::class, function (Faker $faker) {
         'price' => $faker->randomFloat(8, 0, 10000),
         'amount' => $faker->randomFloat(8, 0, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
-        'date' => date('Y-m-d H:i:s', rand(1260099000, 1600000000))
+        'date' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
     ];
 });
