@@ -14,7 +14,7 @@
 </table>
 
 <div id="order-book-sells" class="table-responsive">
-    <table  class="table table-borderless table-striped">
+    <table id="table-book-sells" class="table table-borderless table-striped">
         <tbody>
             @foreach ($sellOrders as $order)
                     <tr class="selltext">
@@ -34,7 +34,7 @@
 </div>
 
 <div id="order-book-buys" class="table-responsive">
-    <table  class="table table-borderless table-striped">
+    <table id="table-book-buys" class="table table-borderless table-striped">
         <tbody>
             @foreach ($buyOrders as $order)
                     <tr class="buytext">

@@ -12,8 +12,8 @@
         </tr>
     </tbody>
 </table>
-<div id="" class="table-responsive">
-	<table class="table table-borderless">
+<div class="table-responsive">
+	<table id="table-order-history" class="table table-borderless">
 		<tbody>
 			<?php foreach ($marketHistory as $order): ?>
 				<?php for ($i=0; $i < 50; $i++): ?>

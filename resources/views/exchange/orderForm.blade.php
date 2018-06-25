@@ -5,8 +5,12 @@
 		<?php //echo "Buy: " . $pair[1] . " Your Balance: " . $_SESSION['balances'][$pair[1]] . " " . $pair[1]; ?>
 	</label>
 		<div class="form-group row">
+				<label for="" class="col-sm-12 col-form-label">
+					<small>Balance:{{ $balance[$coin1->symbol] }} {{ $coin1->symbol }}</small>
+				</label>
+			</div>
+		<div class="form-group row">
 			<label for="staticPrice" class="col-sm-2 col-form-label">Price</label>
-
 			<div class="col-sm-10 input-group mb-3">
 				<input class="form-control" name="input-buy-price" aria-label="Amount (to the nearest dollar)" type="text">
 
@@ -42,6 +46,11 @@
 		<label class="control-label">
 			<?php //echo "Buy: " . $pair[0] . " Your Balance: " . $_SESSION['balances'][$pair[0]] . " " . $pair[0]; ?>
 		</label>
+		<div class="form-group row">
+			<label for="" class="col-sm-12 col-form-label">
+				<small>Balance:{{ $balance[$coin2->symbol] }} {{ $coin2->symbol }}</small>
+			</label>
+		</div>
 		<div class="form-group row">
 			<label for="staticEmail" class="col-sm-2 col-form-label">Price</label>
 			<div class="col-sm-10 input-group mb-3">

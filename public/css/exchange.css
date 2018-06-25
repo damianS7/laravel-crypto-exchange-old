@@ -3,17 +3,16 @@
     min-height: 550px;
     max-height: 550px;
 }
-#col-right, #col-center, #col-right {
+
+#col-right,
+#col-center,
+#col-right {
     min-height: 200px;
 }
 
-#col-right {
+#col-right {}
 
-}
-
-#col-left {
-
-}
+#col-left {}
 
 .clickable {
     cursor: pointer;
@@ -23,12 +22,16 @@
     height: 400px
 }
 
+#user-orders {
+    height: 250px;
+}
+
 #order-book,
 #order-history {
     height: 550px;
 }
 
-#order-history > div{
+#order-history>div {
     height: 100%;
     overflow-y: scroll;
 }
@@ -38,11 +41,9 @@
 }
 
 #order-book .table td,
-#order-book .table th ,
+#order-book .table th,
 #order-history .table td,
-#order-history .table th{
-    
-}
+#order-history .table th {}
 
 #order-book .table,
 #order-history .table {
@@ -50,7 +51,7 @@
 }
 
 #order-book .table td,
-#order-history .table td{
+#order-history .table td {
     padding: 0;
 }
 
@@ -61,7 +62,7 @@
 }
 
 #buy-sell-widget {
-    margin-top:28px
+    margin-top: 28px
 }
 
 #pairs .table td,
@@ -76,10 +77,10 @@
     overflow-y: scroll;
 }
 
-#pairs{
+#pairs {
     width: 600px;
 }
 
-#ppp{
+#ppp {
     margin: 0;
 }
