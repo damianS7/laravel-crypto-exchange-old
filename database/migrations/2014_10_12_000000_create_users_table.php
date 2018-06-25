@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('privileges', ['user', 'admin'])->default('user');
+            $table->enum('frozen', ['1', '0'])->default('0');
+            $table->enum('verification_level', ['0', '1'])->default('0');
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
         });

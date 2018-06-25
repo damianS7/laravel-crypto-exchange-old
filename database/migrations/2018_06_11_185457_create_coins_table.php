@@ -15,14 +15,11 @@ class CreateCoinsTable extends Migration
     {
         Schema::create('coins', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->string('symbol');
-            $table->string('name');
-            $table->string('min_deposit');
-            $table->string('min_withdrawal');
-            $table->string('fee_withdrawal');
-
-            $table->unique('name');
-            $table->unique('symbol');
+            $table->string('symbol')->unique();
+            $table->string('name')->unique();
+            $table->decimal('min_deposit', 22, 8);
+            $table->decimal('min_withdrawal', 22, 8);
+            $table->decimal('fee_withdrawal', 22, 8);
         });
     }
 

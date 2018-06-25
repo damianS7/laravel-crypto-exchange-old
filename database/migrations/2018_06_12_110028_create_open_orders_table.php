@@ -17,8 +17,8 @@ class CreateOpenOrdersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('pair_id');
-            $table->decimal('price', 8, 8);
-            $table->decimal('amount', 8, 8);
+            $table->decimal('price', 15, 8);
+            $table->decimal('amount', 22, 8);
             $table->enum('type', ['buy', 'sell']);
             $table->timestamp('created_at');
 

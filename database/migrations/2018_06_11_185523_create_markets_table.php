@@ -15,10 +15,8 @@ class CreateMarketsTable extends Migration
     {
         Schema::create('markets', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->unsignedInteger('coin_id');
+            $table->unsignedInteger('coin_id')->unique();
             $table->boolean('market_open')->default(false);
-
-            $table->unique('coin_id');
             $table->foreign('coin_id')->references('id')->on('coins')->onDelete('cascade');
         });
     }
