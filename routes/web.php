@@ -21,12 +21,12 @@ Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
 // Admin routes
 Route::get('/admin/', 'Admin\SettingsController@index')->name('admin');
 Route::redirect('/admin/', '/admin/settings/', 302);
-Route::get('/admin/accounts', 'Admin\AccountsController@index')->name('admin-accounts');
 
 // Admin settings
 Route::get('/admin/settings/', 'Admin\SettingsController@index')->name('admin-settings');
 Route::post('/admin/settings/', 'Admin\SettingsController@save')->name('admin-save-settings');
 
+Route::resource('/admin/accounts', 'Admin\AccountsController');
 Route::resource('/admin/pairs', 'Admin\PairsController');
 Route::resource('/admin/coins', 'Admin\CoinsController');
 Route::resource('/admin/markets', 'Admin\MarketsController');

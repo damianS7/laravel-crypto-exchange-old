@@ -57,7 +57,7 @@
             <div class="col-sm-3">
                 <div class="list-group" id="menu-list">
                     <a class="list-group-item list-group-item-action" id="settings" href="{{ route('admin-settings') }}">Settings</a>
-                    <a class="list-group-item list-group-item-action" id="accounts" href="{{ route('admin-accounts') }}">Accounts</a>
+                    <a class="list-group-item list-group-item-action" id="accounts" href="{{ route('accounts.index') }}">Accounts</a>
                     <a class="list-group-item list-group-item-action" id="coins" href="{{ route('coins.index') }}">Coins</a>
                     <a class="list-group-item list-group-item-action" id="markets" href="{{ route('markets.index') }}">Markets</a>
                     <a class="list-group-item list-group-item-action" id="pairs" href="{{ route('pairs.index') }}">Pairs</a>
