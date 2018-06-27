@@ -90,6 +90,6 @@ $factory->define(OrderHistory::class, function (Faker $faker) {
         'price' => $faker->randomFloat(8, 0, 10000),
         'amount' => $faker->randomFloat(8, 0, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
-        'date' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
+        'filled_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
     ];
 });

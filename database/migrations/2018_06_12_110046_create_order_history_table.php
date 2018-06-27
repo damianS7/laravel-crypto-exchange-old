@@ -20,7 +20,7 @@ class CreateOrderHistoryTable extends Migration
             $table->decimal('price', 15, 8);
             $table->decimal('amount', 22, 8);
             $table->enum('type', ['buy', 'sell']);
-            $table->timestamp('date');
+            $table->timestamp('filled_at');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('pair_id')->references('id')->on('pairs')->onDelete('cascade');
