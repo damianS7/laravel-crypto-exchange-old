@@ -9,11 +9,19 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index');
 
 // Exchange
+Route::post('/trade/ajax/order/add', 'TradeController@addOrder');
+Route::post('/trade/ajax/order/delete', 'TradeController@deleteOrder');
+Route::get('/trade/ajax/order/open', 'TradeController@openOrders');
+Route::get('/trade/ajax/order/filled', 'TradeController@filledOrders');
+Route::get('/trade/ajax/order/history', 'TradeController@orderHistory');
+Route::get('/trade/ajax/order/book', 'TradeController@orderBook');
+
 Route::get('/trade/theme{theme?}', 'TradeController@changeTheme')->name('change-theme');
 Route::redirect('/trade/', '/trade/BTC-USDT', 302);
 Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
@@ -21,16 +29,12 @@ Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
 // Admin routes
 Route::get('/admin/', 'Admin\SettingsController@index')->name('admin');
 Route::redirect('/admin/', '/admin/settings/', 302);
-
-// Admin settings
 Route::get('/admin/settings/', 'Admin\SettingsController@index')->name('admin-settings');
 Route::post('/admin/settings/', 'Admin\SettingsController@save')->name('admin-save-settings');
-
 Route::resource('/admin/accounts', 'Admin\AccountsController');
 Route::resource('/admin/pairs', 'Admin\PairsController');
 Route::resource('/admin/coins', 'Admin\CoinsController');
 Route::resource('/admin/markets', 'Admin\MarketsController');
-
 Route::get('/admin/withdrawals', 'Admin\WithdrawalsController@index')->name('admin-withdrawals');
 
 // Account routes
@@ -44,11 +48,8 @@ Route::get('/account/api/', 'Account\ApiController@index')->name('api');
 Route::get('/account/verification/', 'Account\VerificationController@index')->name('verification');
 Route::get('/account/security/', 'Account\SecurityController@index')->name('security');
 Route::get('/account/tradehistory/', 'Account\TradeHistoryController@index')->name('tradehistory');
-
 Route::post('/account/deposits/deposit', 'Account\DepositsController@deposit')->name('deposit');
 Route::redirect('/account/deposits/deposit', '/account/deposits/', 302);
 
 // Auth routes
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
