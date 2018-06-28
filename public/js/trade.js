@@ -7,7 +7,7 @@ $(document).ready(function () {
 	}, 1000);
 
 	// User event when removing an open order
-	$('.cancel-order-button').on('click', function () {
+	$('#table-user-orders').on('click', '.cancel-order-button', function () {
 		removeOrder($(this));
 	});
 
@@ -20,6 +20,7 @@ $(document).ready(function () {
 	$('#btn-sell').on('click', function () {
 		addOrder('sell');
 	});
+
 });
 
 // Delete an order
@@ -69,19 +70,19 @@ function updateOrders() {
 
 	// Bug duplicated data
 	ajax('/order/open', 'get', payload, function (response) {
-		//console.log(response);
+		console.log(response);
 		response.data.forEach(function (order) {
 			var html = '<tr data-id="' + order.id + '">';
 			html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
 			html += '<td class="text-left amount">' + order.amount + '</td>';
 			html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
-			html += '<td class="text-right date">' + order.created_at + '</td>';
+			html += '<td class="text-left date">' + order.created_at + '</td>';
 			html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Delete</button></td>';
 			html += '</tr>';
 			var row = $(html);
 
 			row.hide();
-			$("#user-orders > table tr:first").before(row);
+			$("#table-user-orders tbody tr:first").before(row);
 			row.fadeIn('slow');
 		});
 	});
@@ -107,7 +108,7 @@ function updateFilled() {
 			var row = $(html);
 
 			row.hide();
-			$("#user-history > table tr:first").before(row);
+			$("#table-user-history tbody tr:first").before(row);
 			row.fadeIn('slow');
 		});
 	});

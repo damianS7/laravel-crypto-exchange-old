@@ -42,7 +42,7 @@
                 @include('exchange.pairMenu')
             </div>
             <div id="" class="col-sm-4">
-                @include('exchange.priceHistory')
+                include('exchange.priceHistory')
                 MARKET DEPTH
             </div>
             <div id="" class="col-sm-3">
