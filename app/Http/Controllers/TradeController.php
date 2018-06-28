@@ -11,49 +11,178 @@ use App\Http\Models\OrderHistory;
 use App\Http\Models\Pair;
 use App\Http\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
+// Beautify this class
 class TradeController extends Controller
 {
 
-    public function addOrder()
+    /**
+     * Add a new open order
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addOrder(Request $request)
     {
+        $response = [
+            "status" => "error",
+            "message" => "You can not add order because you are not logged in!.",
+            "data" => "",
+        ];
+
+        // Only auth users are allowed from here
+        if (!Auth::check()) {
+            // Non logged users can't pass
+            return response()->json($response);
+        }
+
         // Balance must be checked before put the order
         $order = new Order;
-        $order->user_id = 1;
-        $order->pair_id = 1;
-        $order->price = 1;
-        $order->amount = 1;
-        $order->type = 'buy';
+        $order->user_id = Auth::user()->id;
+        $order->pair_id = $request->pair;
+        $order->price = $request->price;
+        $order->amount = $request->amount;
+        $order->type = $request->type;
+        $order->created_at = date('Y-m-d H:i:s');
         $order->save();
-        //return response->json()
-        //if($request->ajax()){
-        //return "AJAX";
-        //}
-    }
 
-    public function cancelOrder($orderId)
-    {
-
-    }
-
-    public function changeTheme()
-    {
-        if (Cookie::get('theme') == 'light') {
-            Cookie::queue('theme', 'dark', 60 * 24 * 4);
+        if ($order->exists) {
+            $response['data'] = $order;
+            $response['status'] = 'ok';
+            $response['message'] = 'Order added.';
         } else {
-            Cookie::queue('theme', 'light', 60 * 24 * 4);
+            $response['status'] = 'error';
+            $response['message'] = 'Sorry order can not be removed.';
         }
-        //return redirect ('trade');
-        return redirect(url()->previous());
+        return response()->json($response);
     }
 
-    private function pairExists()
+    /**
+     * Delete given order id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteOrder(Request $request)
     {
-        //$search = Pair::find();
-        //if exists return true else false
+        $response = [
+            "status" => "error",
+            "message" => "You can not add order because you are not logged in!.",
+            "data" => "",
+        ];
+
+        // Only auth users are allowed from here
+        if (!Auth::check()) {
+            // Non logged users can't pass
+            return response()->json($response);
+        }
+
+        $order = Order::find($request->order_id);
+
+        if ($order->delete()) {
+            $response['status'] = 'ok';
+            $response['message'] = 'Order removed.';
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Order couldn\'t be removed.';
+        }
+
+        $response['data'] = $order;
+        return response()->json($response);
+    }
+
+    /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function orderHistory(Request $request)
+    {
+        $lastId = $request->last_id;
+        $pairId = $request->pair_id;
+
+        $orders = OrderHistory::where('pair_id', $pairId)->where('id', '>', $lastId)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
+
+        return response()->json(
+            [
+                'status' => 'ok',
+                'data' => $orders,
+            ]
+        );
+
+    }
+
+    /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function openOrders(Request $request)
+    {
+        $response = [
+            "status" => "error",
+            "message" => "You can not fetch orders because you are not logged in!.",
+            "data" => "",
+        ];
+
+        // Only auth users are allowed from here
+        if (!Auth::check()) {
+            // Non logged users can't pass
+            return response()->json($response);
+        }
+
+        $userId = Auth::user()->id;
+        $pairId = $request->pair_id;
+        $orderId = $request->last_id;
+        $orders = Order::where('user_id', $userId)->where('pair_id', $pairId)->where('id', '>', $orderId)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+
+        $response['message'] = '';
+        $response['status'] = 'ok';
+        $response['data'] = $orders;
+        return response()->json($response);
+    }
+
+    /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function filledOrders(Request $request)
+    {
+        $response = [
+            "status" => "error",
+            "message" => "You can not fetch orders because you are not logged in!.",
+            "data" => "",
+        ];
+
+        // Only auth users are allowed from here
+        if (!Auth::check()) {
+            // Non logged users can't pass
+            return response()->json($response);
+        }
+
+        $userId = Auth::user()->id;
+        $pairId = $request->pair_id;
+        $orderId = $request->last_id;
+
+        $orders = OrderHistory::where('user_id', $userId)->where('pair_id', $pairId)->where('id', '>', $orderId)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+
+        $response['message'] = '';
+        $response['status'] = 'ok';
+        $response['data'] = $orders;
+        return response()->json($response);
+    }
+
+    /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    private function updateBook(Request $request)
+    {
+
     }
 
     // Returns the user balance for the coin
@@ -77,6 +206,23 @@ class TradeController extends Controller
             $coin1->symbol => $b1,
             $coin2->symbol => $b2,
         );
+    }
+
+    public function changeTheme()
+    {
+        if (Cookie::get('theme') == 'light') {
+            Cookie::queue('theme', 'dark', 60 * 24 * 4);
+        } else {
+            Cookie::queue('theme', 'light', 60 * 24 * 4);
+        }
+        //return redirect ('trade');
+        return redirect(url()->previous());
+    }
+
+    private function pairExists()
+    {
+        //$search = Pair::find();
+        //if exists return true else false
     }
 
     public function index(Request $request, $pair = null)
@@ -106,19 +252,22 @@ class TradeController extends Controller
             ->join('coins', 'markets.coin_id', '=', 'coins.id')
             ->get()->keyBy('symbol');
 
-        // User trade history for the actual coin he is trading
-        $userHistory = OrderHistory::where('user_id', Auth::user()->id)
-            ->where('pair_id', $pair->id)->get();
+        $userHistory = array();
+        $userOrders = array();
 
-        // Open orders from the user
-        $userOrders = Order::where('user_id', Auth::user()->id)
-            ->where('pair_id', $pair->id)->get();
+        if (Auth::check()) {
+            // User trade history for the actual coin he is trading
+            $userHistory = OrderHistory::where('user_id', Auth::user()->id)->where('pair_id', $pair->id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
 
-        // User balance
-        $balance = $this->updateBalances(Auth::user()->id, $coin1, $coin2);
+            // Open orders from the user
+            $userOrders = Order::where('user_id', Auth::user()->id)->where('pair_id', $pair->id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+
+            // User balance
+            $balance = $this->updateBalances(Auth::user()->id, $coin1, $coin2);
+        }
 
         // Market history for the actual pair user is trading
-        $marketHistory = OrderHistory::where('pair_id', $pair->id)->get();
+        $marketHistory = OrderHistory::where('pair_id', $pair->id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
 
         // Book of open orders for the actual pair
         /*

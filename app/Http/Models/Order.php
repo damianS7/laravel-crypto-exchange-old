@@ -8,4 +8,5 @@ class Order extends Model
 {
     protected $table = "open_orders";
     public $timestamps = false;
+    protected $fillable = ['created_at'];
 }

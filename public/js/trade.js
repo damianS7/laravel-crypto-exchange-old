@@ -1,51 +1,181 @@
 $(document).ready(function () {
 	setInterval(function () {
-		$('#table-order-history > tbody:last-child').append('<tr><td class="text-left" style="color:#ff007a">0.00030001</td><td class="text-center" style="color:#cdcdcd">0.01000032</td><td class="text-right"style="color:#595d61">23-3-3 04:41:31</td></tr>');
+		//updateBook();
+		updateMarketHistory();
+		updateOrders();
+		updateFilled();
+	}, 1000);
 
-		$('#table-book-buys > tbody:last-child').append('<tr class="buytext"><td class="text-left">0.00030001</td><td class="text-center" >0.01000032</td><td class="text-right">0.00003333</td></tr>');
+	// User event when removing an open order
+	$('.cancel-order-button').on('click', function () {
+		removeOrder($(this));
+	});
 
-		$('#table-book-sells > tbody:last-child').append('<tr class="selltext"><td class="text-left >0.00030001</td><td class="text-center">0.01000032</td><td class="text-right">0.00003333</td></tr>');
+	// User event when adding a buy order
+	$('#btn-buy').on('click', function () {
+		addOrder('buy');
+	});
 
-	}, 10000);
+	// User event when adding a sell order
+	$('#btn-sell').on('click', function () {
+		addOrder('sell');
+	});
 });
 
-function append() {
+// Delete an order
+function removeOrder(button) {
+	var payload = {
+		'order_id': button.attr('data-id'),
+	};
 
-}
-
-function remove() {
-
-}
-
-function addOrder() {
-
-}
-
-function removeOrder() {
-	$.ajax({
-		type: 'DELETE',
-		url: 'posts/' + id,
-		data: {
-			'_token': $('input[name=_token]').val(),
-		},
-		success: function (data) {
-			toastr.success('Successfully deleted Post!', 'Success Alert', {
-				timeOut: 5000
+	ajax('/order/delete/', 'post', payload, function (response) {
+		//console.log(response);
+		if (response.status == 'ok') {
+			// Remove order from user orders table
+			button.closest('tr').fadeOut('slow', function () {
+				button.closest('tr').remove();
 			});
-			$('.item' + data['id']).remove();
+		} else if (response.status == 'error') {
+			toastr.error('Sorry order can not be removed.');
 		}
 	});
 }
-/*
-$('#buy-button').on('click', '.delete', function () {
-});
-*/
-//buy
-//sell
-//cancel order
-//append to trade history
-//append to book order buy
-//append to book order sell
-//remove from book order buy
-//remove from book order sell
-//https://jmkleger.com/post/ajax-crud-for-laravel-5-4
+
+// Adds an order (buy/sell)
+function addOrder(type) {
+	var payload = {
+		'type': type,
+		'price': $('#input-' + type + '-price').val(),
+		'amount': $('#input-' + type + '-amount').val(),
+		'pair': $('#btn-' + type).attr('data-pair'),
+	};
+
+	ajax('/order/add', 'post', payload, function (response) {
+		//console.log(response);
+		if (response.status == 'error') {
+			toastr.error(response.message);
+		} else if (response.status == 'ok') {
+			toastr.success(response.message);
+		}
+	});
+}
+
+// User open orders
+function updateOrders() {
+	var payload = {
+		'last_id': $('#table-user-orders > tbody > tr:first').attr('data-id'),
+		'pair_id': $('#btn-buy').attr('data-pair')
+	};
+
+	// Bug duplicated data
+	ajax('/order/open', 'get', payload, function (response) {
+		//console.log(response);
+		response.data.forEach(function (order) {
+			var html = '<tr data-id="' + order.id + '">';
+			html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
+			html += '<td class="text-left amount">' + order.amount + '</td>';
+			html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
+			html += '<td class="text-right date">' + order.created_at + '</td>';
+			html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Delete</button></td>';
+			html += '</tr>';
+			var row = $(html);
+
+			row.hide();
+			$("#user-orders > table tr:first").before(row);
+			row.fadeIn('slow');
+		});
+	});
+}
+
+// User filled history order
+function updateFilled() {
+	var payload = {
+		'last_id': $('#table-user-history > tbody > tr:first').attr('data-id'),
+		'pair_id': $('#btn-buy').attr('data-pair')
+	};
+
+	// Bug duplicated data
+	ajax('/order/filled', 'get', payload, function (response) {
+		//console.log(response);
+		response.data.forEach(function (order) {
+			var html = '<tr data-id="' + order.id + '">';
+			html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
+			html += '<td class="text-left amount">' + order.amount + '</td>';
+			html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
+			html += '<td class="text-right date">' + order.filled_at + '</td>';
+			html += '</tr>';
+			var row = $(html);
+
+			row.hide();
+			$("#user-history > table tr:first").before(row);
+			row.fadeIn('slow');
+		});
+	});
+}
+
+// This only prints latest trades that are not already in the table
+function updateMarketHistory() {
+	var payload = {
+		'last_id': $('#table-market-history > tbody > tr:first').attr('data-id'),
+		'pair_id': $('#btn-sell').attr('data-pair'),
+	};
+
+	ajax('/order/history', 'get', payload, function (response) {
+		//console.log(response);
+		if (response.data) {
+			// We add every row to the market history
+			response.data.forEach(function (order) {
+				var html = '<tr data-id="' + order.id + '">';
+				html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
+				html += '<td class="text-left amount">' + order.amount + '</td>';
+				html += '<td class="text-right date">' + order.filled_at + '</td>';
+				html += '</tr>';
+				var row = $(html);
+
+				row.hide();
+				$('#table-market-history > tbody > tr:first').before(row);
+				row.fadeIn('slow');
+			});
+		}
+	});
+}
+
+
+// This functions update/repaint the book order when new data rows
+// are added.
+function updateBook() {
+	var payload = {
+		'last_id': $('#table-trade-history > tbody > tr:first').attr('data-id'),
+		'pair_id': $('#btn-sell').attr('data-pair'),
+	};
+
+	ajax('/order/book', 'get', payload, function (response) {
+		//console.log(response);
+		if (response.data) {
+			// We add every row to the market history
+			response.data.forEach(function (row) {
+
+			});
+		}
+	});
+}
+
+// Just send the data using ajax throught the specified params
+// path: the route where data will be sent
+// method: GET/POST
+// payload: the data to send
+// callback: the function to call after ajax is processed
+function ajax(path, method, payload, callback) {
+	payload['_token'] = $('meta[name="csrf-token"]').attr('content');
+	$.ajax({
+		type: method,
+		url: '/trade/ajax' + path,
+		data: payload,
+		success: function (response) {
+			callback(response);
+		},
+		error: function (response) {
+			callback(response);
+		}
+	});
+}
