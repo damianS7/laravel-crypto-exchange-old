@@ -22,6 +22,7 @@
     height: 400px
 }
 
+#user-history,
 #user-orders {
     height: 250px;
 }
@@ -39,11 +40,6 @@
 #order-book .table {
     margin-bottom: 0;
 }
-
-#order-book .table td,
-#order-book .table th,
-#order-history .table td,
-#order-history .table th {}
 
 #order-book .table,
 #order-history .table {

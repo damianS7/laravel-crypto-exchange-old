@@ -1,13 +1,12 @@
-<div id="user-orders" class="table-responsive">
-    <table id="" class="table table-borderless table-striped">
-	<colgroup>
+<table class="table table-borderless">
+    <colgroup>
         <col style="width: 20%">
         <col style="width: 20%">
         <col style="width: 20%">
 		<col style="width: 20%">
 		<col style="width: 20%">
     </colgroup>
-    <thead>
+    <tbody>
         <tr>
             <th class="text-left" scope="col">Price</th>
             <th class="text-left" scope="col">Amount</th>
@@ -15,28 +14,35 @@
             <th class="text-left" scope="col">Date</th>
 			<th class="text-right" scope="col">Action</th>
         </tr>
-    </thead>
+    </tbody>
+</table>
+
+<div id="user-orders" class="table-responsive">
+    <table id="table-user-orders" class="table table-borderless table-striped">
+        <colgroup>
+            <col style="width: 20%">
+            <col style="width: 20%">
+            <col style="width: 20%">
+            <col style="width: 20%">
+            <col style="width: 20%">
+        </colgroup>
         <tbody>
             @foreach ($userOrders as $order)
-                <tr>
-                    <td>
+                <tr data-id="{{ $order->id }}">
+                    <td class="{{ $order->type }}-price">
                         <span>{{ $order->price }}</span>
                     </td>
-                    <td>
+                    <td class="amount">
                         <span>{{ $order->amount }}</span>
                     </td>
-                    <td>
+                    <td class="{{ $order->type }}-price">
 						<span>{{ $order->type }}</span>
 					</td>
-					<td>
+					<td class="date">
 						<span>{{ $order->created_at }}</span>
 					</td>
-					<td>
-						<form action="" method="post">
-							<input type="hidden" name="_method" value="delete">
-							{{ csrf_field() }}
-							<button type="submit" name="submit" value="delete" class="btn btn-sm btn-danger float-right confirm">Delete</button>
-						</form>
+					<td class="text-right">
+                        <button type="submit" data-id="{{ $order->id }}" value="removeOrder" class="btn btn-sm btn-danger cancel-order-button">Delete</button>
 					</td>
                 </tr>
             @endforeach

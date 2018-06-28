@@ -15,19 +15,24 @@
 
 <div id="order-book-sells" class="table-responsive">
     <table id="table-book-sells" class="table table-borderless table-striped">
+        <colgroup>
+            <col style="width: 33%">
+            <col style="width: 33%">
+            <col style="width: 33%">
+        </colgroup>
         <tbody>
             @foreach ($sellOrders as $order)
-                    <tr class="selltext">
-                        <td class="text-left">
-                            <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
-                        </td>
-                        <td class="text-right">
-                            {{ $order->total }}
-                        </td>
-                    </tr>
+            <tr class="selltext">
+                <td class="text-left">
+                    <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
+                </td>
+                <td class="text-right">
+                    {{ $order->total }}
+                </td>
+            </tr>
             @endforeach
         </tbody>
     </table>
@@ -35,17 +40,22 @@
 
 <div id="order-book-buys" class="table-responsive">
     <table id="table-book-buys" class="table table-borderless table-striped">
+        <colgroup>
+            <col style="width: 33%">
+            <col style="width: 33%">
+            <col style="width: 33%">
+        </colgroup>
         <tbody>
             @foreach ($buyOrders as $order)
-                    <tr class="buytext">
-                        <td class="text-left">
-                            <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
-                        </td>
-                        <td class="text-right">{{ $order->total }}</td>
-                    </tr>
+            <tr class="buytext">
+                <td class="text-left">
+                    <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
+                </td>
+                <td class="text-right">{{ $order->total }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>

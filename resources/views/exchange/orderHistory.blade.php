@@ -7,31 +7,26 @@
     <tbody>
         <tr>
             <th class="text-left" scope="col">Price</th>
-            <th class="text-center" scope="col">Amount</th>
-            <th class="text-right" scope="col">Date</th>
+            <th class="text-left" scope="col">Amount</th>
+            <th class="text-right" scope="col">Filled</th>
         </tr>
     </tbody>
 </table>
-<div class="table-responsive">
-	<table id="table-order-history" class="table table-borderless">
-		<tbody>
-			<?php foreach ($marketHistory as $order): ?>
-				<?php for ($i=0; $i < 50; $i++): ?>
-                    <?php if($order['type'] == "buy"): ?>
-                        <tr>
-                            <td class="text-left" style="color:#8ec919"><?php echo $order['price']; ?></td>
-                            <td class="text-center" style="color:#cdcdcd"><?php echo $order['amount']; ?></td>
-                            <td class="text-right" style="color:#595d61"><?php echo $order['date']; ?></td>
-                        </tr>
-                    <?php else: ?>
-                        <tr>
-                            <td class="text-left" style="color:#ff007a"><?php echo $order['price']; ?></td>
-                            <td class="text-center" style="color:#cdcdcd"><?php echo $order['amount']; ?></td>
-                            <td class="text-right" style="color:#595d61"><?php echo $order['date']; ?></td>
-                        </tr>
-                    <?php endif; ?>
-				<?php endfor; ?>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+<div id="trade-history" class="table-responsive">
+    <table id="table-trade-history" class="table table-borderless">
+        <colgroup>
+            <col style="width: 30%">
+            <col style="width: 30%">
+            <col style="width: 40%">
+        </colgroup>
+        <tbody>
+            @foreach ($marketHistory as $order)
+            <tr data-id="{{ $order->id }}">
+                <td class="text-left {{ $order->type }}-price">{{ $order->price }}</td>
+                <td class="text-left amount">{{ $order->amount }}</td>
+                <td class="text-right date">{{ $order->filled_at }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
