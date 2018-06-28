@@ -1,3 +1,4 @@
+<div class="row">
 
 <div class="col-sm-6">
 	<div class="form-group">
@@ -82,4 +83,5 @@
 		</div>
 	</div>
 	<button type="submit" id="btn-sell" data-type="sell" data-pair="{{ $pair->id }}" class="btn btn-danger btn-block">SELL</button>
+</div>
 </div>

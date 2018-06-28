@@ -1,13 +1,3 @@
-like poloniex DIVIDIR EN 2 EL MARKET HISTORY COMO BUY SELLS
-
-<p>Market id 1 {{ @$markets['BTC']->symbol }}</p>
-<p>Pairs:{{ count( @$markets['BTC']->getPairs() ) }}</p>
-@foreach ($markets as $market)
-<p>Market: {{ $market->symbol }}</p>
-<p>Pairs: {{ count($market->getPairs()) }}</p>
-@foreach ($market->getPairs() as $pair)
-<p>Pair: {{ $pair->symbol }}</p>
-@endforeach @endforeach
 <div id="pairs">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -20,48 +10,69 @@ like poloniex DIVIDIR EN 2 EL MARKET HISTORY COMO BUY SELLS
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">BTX</a>
         </li>
         <li class="nav-item">
-            <input id="search_coin" class="form-control" aria-label="" type="text" value="" placeholder="Search a coin" onClick="doSearch()">
+            <input id="search_coin" class="form-control form-control-sm" aria-label="" type="text" value="" placeholder="Search a coin" onClick="doSearch()">
         </li>
     </ul>
 
-    <table id="ppp" class="table table-borderless">
-
-        <tbody>
-            <tr>
-                <th style="width: 25%">Symbol</th>
-                <th style="width: 25%">Price</th>
-                <th style="width: 25%">24h Change</th>
-                <th style="width: 25%">24h Volume</th>
-            </tr>
-        </tbody>
-    </table>
-
-    <div id="search-scroll" class="tab-content">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <table id="pair-table" class="table table-borderless">
-
-                <tbody>
-                    <?php foreach ($coins as $coin): ?>
-                    <tr class="">
-                        <input type="hidden" name="id" value="<?php echo $coin['id']; ?>" />
-                        <td style="width: 25%" name="coin">
-                            <?php echo $coin['symbol']; ?>
-                        </td>
-                        <td style="width: 25%" name="price">1</td>
-                        <td style="width: 25%" name="24hchange">1</td>
-                        <td style="width: 25%" name="24hvolume">1</td>
-                    </tr>
-                    <?php endforeach;?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-        </div>
-
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-
-        </div>
+    <div id="pair-menu" class="">
+        <table id="table-pair-menu" class="table table-striped table-responsive table-borderless">
+            <colgroup>
+                <col style="width: 30%">
+                <col style="width: 30%">
+                <col style="width: 40%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th class="text-left" scope="col">Price</th>
+                    <th class="text-left" scope="col">Amount</th>
+                    <th class="text-right" scope="col">Filled</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($markets as $pair)
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                <tr data-id="{{ $pair->id }}">
+                    <td class="text-left {{ $pair->symbol }}-price">{{ $pair->symbol }}</td>
+                    <td class="text-left amount">{{ $pair->symbol }}</td>
+                    <td class="text-right date">{{ $pair->symbol }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
+
 </div>

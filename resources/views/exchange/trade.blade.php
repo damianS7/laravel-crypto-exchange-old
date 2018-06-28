@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BitEx | @yield('title') {{ $pair }} </title>
+    <title>BitEx | @yield('title') {{ $coin1->symbol }}{{ $coin2->symbol }} </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link href="{{ asset('css/common.css') }}" rel="stylesheet">
     <link href="{{ asset('css/exchange.css') }}" rel="stylesheet">
@@ -36,33 +36,37 @@
     </div>
     <!-- <p>&nbsp;</p> -->
     <div class="container-fluid">
-        <div class="row">
-            <div id="col-left" class="col-sm-7">
-                <div class="row">
-                    <div id="price-history" class="col-sm-12">
-                        include('exchange.priceHistory')
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div id="user-orders" class="col-sm-12">
-                        @include('exchange.tab')
-                    </div>
-                </div>
+        <div id="row1" class="row">
+            <div id="market-menu-container" class="col-sm-2">
+                @include('exchange.pairMenu')
+            </div>
+            <div id="" class="col-sm-4">
+                @include('exchange.priceHistory')
+                MARKET DEPTH
+            </div>
+            <div id="" class="col-sm-3">
+                @include('exchange.orderBook')
+            </div>
+            <div id="" class="col-sm-3">
+                @include('exchange.marketHistory')
+            </div>
+        </div>
+
+
+        <div id="row2" class="row">
+            <div id="" class="col-sm-6">
+                @include('exchange.tab')
             </div>
 
-            <div id="col-right" class="col-sm-5">
-                <div class="row">
-                    <div id="order-book" class="col-sm-6">
-                        @include('exchange.orderBook')
-                    </div>
-                    <div id="order-history" class="col-sm-6">
-                        @include('exchange.orderHistory')
-                    </div>
-                </div>
-                <div id="buy-sell-widget" class="row">
-                    @include('exchange.orderForm')
-                </div>
+            <div id="" class="col-sm-6">
+                @include('exchange.orderForm')
+            </div>
+        </div>
+
+        <div id="row3" class="row">
+            <div id="" class="col-sm-7">
+                CHAT
             </div>
         </div>
     </div>

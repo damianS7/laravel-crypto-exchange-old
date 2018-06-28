@@ -1,82 +1,69 @@
-#price-history {
-    background-color: coral;
-    min-height: 550px;
-    max-height: 550px;
+#row1 {
+	min-height: 550px;
 }
 
-#col-right,
-#col-center,
-#col-right {
-    min-height: 200px;
+#row2 {
+	min-height: 200px;
 }
 
-#col-right {}
-
-#col-left {}
-
-.clickable {
-    cursor: pointer;
+#row3 {
+	min-height: 300px;
 }
 
+.tradingview-widget-container,
 #tradingview_3ebbc {
-    height: 400px
+	min-height: 300px
 }
 
-#user-history,
-#user-orders {
-    height: 250px;
+/* TABLE STYLES */
+
+#pair-menu>table>tbody {
+	max-height: 500px;
 }
 
-#order-book,
-#order-history {
-    height: 550px;
+#pair-menu>table,
+#order-book>table,
+#market-history>table {
+	font-size: 0.65em;
 }
 
-#order-history>div {
-    height: 100%;
-    overflow-y: scroll;
+#pair-menu>table th,
+#pair-menu>table td,
+#order-book>table th,
+#order-book>table td,
+#market-history>table th,
+#market-history>table td {
+	padding: 0;
 }
 
-#order-book .table {
-    margin-bottom: 0;
+#user-history>table>tbody,
+#user-orders>table>tbody {
+	max-height: 275px;
 }
 
-#order-book .table,
-#order-history .table {
-    font-size: 0.65em;
+#market-history>table>tbody {
+	max-height: 550px;
 }
 
-#order-book .table td,
-#order-history .table td {
-    padding: 0;
+#order-book>table>tbody {
+	max-height: 275px;
 }
 
-#order-book-buys,
-#order-book-sells {
-    height: 50%;
-    overflow-y: scroll;
+tbody {
+	display: block;
+	height: 100%;
+	overflow: auto;
 }
 
-#buy-sell-widget {
-    margin-top: 28px
+thead,
+tbody tr {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
 }
 
-#pairs .table td,
-#pairs .table th {
-    padding: 0;
-    width: 25%;
+thead {
+	width: calc( 100% - 1em)
 }
 
-#search-scroll {
-    background-color: lightblue;
-    height: 200px;
-    overflow-y: scroll;
-}
-
-#pairs {
-    width: 600px;
-}
-
-#ppp {
-    margin: 0;
-}
+/* TABLE STYLES */

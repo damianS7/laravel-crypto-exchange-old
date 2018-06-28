@@ -1,25 +1,17 @@
-<table class="table table-borderless">
-    <colgroup>
-        <col style="width: 33%">
-        <col style="width: 33%">
-        <col style="width: 33%">
-    </colgroup>
-    <tbody>
-        <tr>
-            <th class="text-left" scope="col">Price</th>
-            <th class="text-center" scope="col">Amount</th>
-            <th class="text-right" scope="col">Total</th>
-        </tr>
-    </tbody>
-</table>
-
-<div id="order-book-sells" class="table-responsive">
-    <table id="table-book-sells" class="table table-borderless table-striped">
+<div id="order-book" class="">
+    <table id="table-order-book" class="table table-striped table-responsive table-borderless">
         <colgroup>
             <col style="width: 33%">
             <col style="width: 33%">
             <col style="width: 33%">
         </colgroup>
+        <thead>
+            <tr>
+                <th class="text-left" scope="col">Price</th>
+                <th class="text-left" scope="col">Amount</th>
+                <th class="text-right" scope="col">Total</th>
+            </tr>
+        </thead>
         <tbody>
             @foreach ($sellOrders as $order)
             <tr class="selltext">
@@ -35,16 +27,6 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
-</div>
-
-<div id="order-book-buys" class="table-responsive">
-    <table id="table-book-buys" class="table table-borderless table-striped">
-        <colgroup>
-            <col style="width: 33%">
-            <col style="width: 33%">
-            <col style="width: 33%">
-        </colgroup>
         <tbody>
             @foreach ($buyOrders as $order)
             <tr class="buytext">

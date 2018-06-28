@@ -1,24 +1,17 @@
-<table class="table table-borderless" style="margin:0">
-    <colgroup>
-        <col style="width: 30%">
-        <col style="width: 30%">
-        <col style="width: 40%">
-    </colgroup>
-    <tbody>
-        <tr>
-            <th class="text-left" scope="col">Price</th>
-            <th class="text-left" scope="col">Amount</th>
-            <th class="text-right" scope="col">Filled</th>
-        </tr>
-    </tbody>
-</table>
-<div id="trade-history" class="table-responsive">
-    <table id="table-trade-history" class="table table-borderless">
+<div id="market-history" class="">
+    <table id="table-market-history" class="table table-striped table-responsive table-borderless">
         <colgroup>
             <col style="width: 30%">
             <col style="width: 30%">
             <col style="width: 40%">
         </colgroup>
+        <thead>
+            <tr>
+                <th class="text-left" scope="col">Price</th>
+                <th class="text-left" scope="col">Amount</th>
+                <th class="text-right" scope="col">Filled</th>
+            </tr>
+        </thead>
         <tbody>
             @foreach ($marketHistory as $order)
             <tr data-id="{{ $order->id }}">

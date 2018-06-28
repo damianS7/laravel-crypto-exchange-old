@@ -17,24 +17,24 @@ nav {
 
 #user-orders .buy-price,
 #user-history .buy-price,
-#trade-history .buy-price {
+#market-history .buy-price {
     color: #8ec919;
 }
 
 #user-orders .sell-price,
 #user-history .sell-price,
-#trade-history .sell-price {
+#market-history .sell-price {
     color: #ff007a;
 }
 
 #user-orders .amount,
 #user-history .amount,
-#trade-history .amount {
+#market-history .amount {
     color: #cdcdcd;
 }
 
 #user-orders .date,
 #user-history .date,
-#trade-history .date {
+#market-history .date {
     color: #595d61;
 }
