@@ -7,38 +7,44 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="text-left" scope="col">Price</th>
-                <th class="text-left" scope="col">Amount</th>
-                <th class="text-right" scope="col">Total</th>
+                <th class="text-left" scope="col">Price({{ $coin2->symbol }})</th>
+                <th class="text-left" scope="col">Amount({{ $coin1->symbol }})</th>
+                <th class="text-right" scope="col">Total({{ $coin2->symbol }})</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach ($sellOrders as $order)
+        <tbody id="book-sells">
+            @foreach ($order_book['sell_orders'] as $order)
             <tr class="selltext">
-                <td class="text-left">
-                    <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
+                <td class="text-left" style="position:relative">
+                    <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
+                    <span class="price clickable">{{ $order->price }}</span>
                 </td>
                 <td class="text-center">
-                    <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
+                    <span class="amount clickable">{{ $order->amount }}</span>
                 </td>
                 <td class="text-right">
-                    {{ $order->total }}
+                    <span class="total clickable">{{ $order->total }}</span>
                 </td>
             </tr>
             @endforeach
+            <input id="sells-total-coins" value="{{ $order_book['sell_total_coins'] }}" type="hidden">
         </tbody>
-        <tbody>
-            @foreach ($buyOrders as $order)
+        <tbody id="book-buys">
+            @foreach ($order_book['buy_orders'] as $order)
             <tr class="buytext">
-                <td class="text-left">
-                    <span class="clickable" onClick="setPriceOrder('orderprice')">{{ $order->price }}</span>
+                <td class="text-left" style="position:relative">
+                    <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
+                    <span class="price clickable">{{ $order->price }}</span>
                 </td>
                 <td class="text-center">
-                    <span class="clickable" onClick="setAmountOrder('{{ $order->price }}')">{{ $order->amount }}</span>
+                    <span class="amount clickable">{{ $order->amount }}</span>
                 </td>
-                <td class="text-right">{{ $order->total }}</td>
+                <td class="text-right">
+                    <span class="total clickable">{{ $order->total }}</span>
+                </td>
             </tr>
             @endforeach
+            <input id="buys-total-coins" value="{{ $order_book['buy_total_coins'] }}" type="hidden">
         </tbody>
     </table>
 </div>
