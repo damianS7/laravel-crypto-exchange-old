@@ -13,11 +13,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($marketHistory as $order)
+            @foreach ($market_history as $order)
             <tr data-id="{{ $order->id }}">
-                <td class="text-left {{ $order->type }}-price">{{ $order->price }}</td>
-                <td class="text-left amount">{{ $order->amount }}</td>
-                <td class="text-right date">{{ $order->filled_at }}</td>
+                <td class="text-left">
+                    <span class="{{ $order->type }}-price price clickable">{{ $order->price }}</span>
+                </td>
+                <td class="text-left">
+                    <span class="amount">{{ $order->amount }}</span>
+                </td>
+                <td class="text-right">
+                    <span class="date">{{ $order->filled_at }}</span>
+                </td>
             </tr>
             @endforeach
         </tbody>
