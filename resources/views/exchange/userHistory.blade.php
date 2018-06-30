@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($userHistory as $order)
+            @foreach ($user_history as $order)
             <tr data-id="{{ $order->id }}">
                 <td class="{{ $order->type }}-price">
                     <span>{{ $order->price }}</span>

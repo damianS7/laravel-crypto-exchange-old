@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($userOrders as $order)
+            @foreach ($user_orders as $order)
                 <tr data-id="{{ $order->id }}">
                     <td class="{{ $order->type }}-price">
                         <span>{{ $order->price }}</span>
@@ -32,7 +32,7 @@
                         <span>{{ $order->created_at }}</span>
                     </td>
                     <td class="text-right">
-                        <button type="submit" data-id="{{ $order->id }}" class="btn btn-sm btn-danger cancel-order-button">Delete</button>
+                        <button type="submit" data-id="{{ $order->id }}" class="btn btn-sm btn-danger cancel-order-button">Cancel</button>
                     </td>
                 </tr>
             @endforeach
