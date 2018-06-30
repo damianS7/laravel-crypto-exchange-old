@@ -15,6 +15,14 @@ nav {
     color: #ff007a;
 }
 
+#book-sells .bar {
+    background-color: #ff6fb5;
+}
+
+#book-buys .bar {
+    background-color: #cefa75;
+}
+
 #user-orders .buy-price,
 #user-history .buy-price,
 #market-history .buy-price {

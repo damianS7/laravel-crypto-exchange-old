@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     background-color: #262d33;
     color: rgb(167, 162, 162);
 }
@@ -7,10 +8,34 @@ nav {
     background-color: #26282a;
 }
 
-.buytext{
-    color:#8ec919;
+.buytext {
+    color: #8ec919;
 }
 
-.selltext{
-    color:#ff007a;
+.selltext {
+    color: #ff007a;
+}
+
+#user-orders .buy-price,
+#user-history .buy-price,
+#market-history .buy-price {
+    color: #8ec919;
+}
+
+#user-orders .sell-price,
+#user-history .sell-price,
+#market-history .sell-price {
+    color: #ff007a;
+}
+
+#user-orders .amount,
+#user-history .amount,
+#market-history .amount {
+    color: #cdcdcd;
+}
+
+#user-orders .date,
+#user-history .date,
+#market-history .date {
+    color: #595d61;
 }

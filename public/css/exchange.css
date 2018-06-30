@@ -10,12 +10,29 @@
 	min-height: 300px;
 }
 
+.clickable {
+	cursor: pointer;
+}
+
 .tradingview-widget-container,
 #tradingview_3ebbc {
 	min-height: 300px
 }
 
 /* TABLE STYLES */
+
+#order-book>table td span {
+	position: relative;
+	z-index: 2;
+}
+
+#book-buys .bar,
+#book-sells .bar {
+	position: absolute;
+	z-index: 1;
+	min-height: 100%;
+	min-width: 1px;
+}
 
 #pair-menu>table>tbody {
 	max-height: 500px;
@@ -53,6 +70,7 @@
 }
 
 #order-book>table>tbody {
+	min-height: 275px;
 	max-height: 275px;
 }
 
