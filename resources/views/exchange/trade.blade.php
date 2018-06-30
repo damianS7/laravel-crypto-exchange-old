@@ -41,32 +41,32 @@
             <div id="market-menu-container" class="col-sm-2">
                 @include('exchange.pairMenu')
             </div>
-            <div id="" class="col-sm-4">
+            <div id="price-history-container" class="col-sm-4">
                 include('exchange.priceHistory')
                 MARKET DEPTH
             </div>
-            <div id="" class="col-sm-3">
+            <div id="order-book-container" class="col-sm-3">
                 @include('exchange.orderBook')
             </div>
-            <div id="" class="col-sm-3">
+            <div id="market-history-container" class="col-sm-3">
                 @include('exchange.marketHistory')
             </div>
         </div>
 
 
         <div id="row2" class="row">
-            <div id="" class="col-sm-6">
+            <div id="user-orders-container" class="col-sm-6">
                 @include('exchange.tab')
             </div>
 
-            <div id="" class="col-sm-6">
+            <div id="order-form-container" class="col-sm-6">
                 @include('exchange.orderForm')
             </div>
         </div>
 
         <div id="row3" class="row">
-            <div id="" class="col-sm-7">
-                CHAT
+            <div id="chat-container" class="col-sm-7">
+                @include('exchange.chat')
             </div>
         </div>
     </div>
