@@ -19,13 +19,30 @@ use Illuminate\Support\Facades\DB;
 // Beautify this class
 class TradeController extends Controller
 {
-
     /**
      * Add a new open order
+     * @return \App\Http\Models\Order
+     */
+    private function addOrder($userId, $pairId, $price, $amount, $type)
+    {
+        // Balance must be checked before put the order
+        $order = new Order;
+        $order->user_id = $userId;
+        $order->pair_id = $pairId;
+        $order->price = $price;
+        $order->amount = $amount;
+        $order->type = $type;
+        $order->created_at = date('Y-m-d H:i:s');
+        $order->save();
+        return $order;
+    }
+
+    /**
+     * Delete given order id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function addOrder(Request $request)
+    public function ajaxAddOrder(Request $request)
     {
         $response = [
             "status" => "error",
@@ -39,15 +56,7 @@ class TradeController extends Controller
             return response()->json($response);
         }
 
-        // Balance must be checked before put the order
-        $order = new Order;
-        $order->user_id = Auth::user()->id;
-        $order->pair_id = $request->pair;
-        $order->price = $request->price;
-        $order->amount = $request->amount;
-        $order->type = $request->type;
-        $order->created_at = date('Y-m-d H:i:s');
-        $order->save();
+        $order = $this->addOrder(Auth::user()->id, $request->pair_id, $request->price, $request->amount, $request->type);
 
         if ($order->exists) {
             $response['data'] = $order;
@@ -57,7 +66,19 @@ class TradeController extends Controller
             $response['status'] = 'error';
             $response['message'] = 'Sorry order can not be removed.';
         }
+
         return response()->json($response);
+    }
+
+    /**
+     * Delete given order id
+     * @return \App\Http\Models\Order
+     */
+    private function deleteOrder($orderId)
+    {
+        $order = Order::find($orderId);
+        $order->delete();
+        return $order;
     }
 
     /**
@@ -65,7 +86,7 @@ class TradeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteOrder(Request $request)
+    public function ajaxDeleteOrder(Request $request)
     {
         $response = [
             "status" => "error",
@@ -79,9 +100,9 @@ class TradeController extends Controller
             return response()->json($response);
         }
 
-        $order = Order::find($request->order_id);
+        $order = $this->deleteOrder($request->order_id);
 
-        if ($order->delete()) {
+        if ($order) {
             $response['status'] = 'ok';
             $response['message'] = 'Order removed.';
         } else {
@@ -95,94 +116,137 @@ class TradeController extends Controller
 
     /**
      *
+     * This returns updated data so we can update the website
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function orderHistory(Request $request)
+
+    public function ajaxUpdateView(Request $request)
     {
-        $lastId = $request->last_id;
-        $pairId = $request->pair_id;
+        $market_history_last_id = $request->last_market_history_id;
+        $user_history_last_id = $request->last_market_history_id;
+        $user_orders_last_id = $request->last_market_history_id;
+        $pair_id = $request->pair_id;
+        $user_id = null;
 
-        $orders = OrderHistory::where('pair_id', $pairId)->where('id', '>', $lastId)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
-
-        return response()->json(
-            [
-                'status' => 'ok',
-                'data' => $orders,
-            ]
-        );
-
-    }
-
-    /**
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function openOrders(Request $request)
-    {
-        $response = [
-            "status" => "error",
-            "message" => "You can not fetch orders because you are not logged in!.",
-            "data" => "",
-        ];
-
-        // Only auth users are allowed from here
-        if (!Auth::check()) {
-            // Non logged users can't pass
-            return response()->json($response);
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
         }
 
-        $userId = Auth::user()->id;
-        $pairId = $request->pair_id;
-        $orderId = $request->last_id;
-        $orders = Order::where('user_id', $userId)->where('pair_id', $pairId)->where('id', '>', $orderId)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
-
-        $response['message'] = '';
-        $response['status'] = 'ok';
-        $response['data'] = $orders;
+        $response = [
+            'status' => 'ok',
+            'message' => '',
+            'data' => [
+                'market_history' => $this->getMarketHistory($pair_id, $market_history_last_id),
+                'order_book' => $this->getOrderBook($pair_id),
+                'user_history' => $this->getUserHistory($user_id, $pair_id, $user_history_last_id),
+                'user_orders' => $this->getUserOrders($user_id, $pair_id, $user_orders_last_id),
+            ],
+        ];
         return response()->json($response);
     }
 
-    /**
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function filledOrders(Request $request)
+    private function getMarketHistory($pair_id, $last_id = null)
     {
-        $response = [
-            "status" => "error",
-            "message" => "You can not fetch orders because you are not logged in!.",
-            "data" => "",
-        ];
-
-        // Only auth users are allowed from here
-        if (!Auth::check()) {
-            // Non logged users can't pass
-            return response()->json($response);
+        if ($last_id !== null) {
+            return OrderHistory::where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
         }
 
-        $userId = Auth::user()->id;
-        $pairId = $request->pair_id;
-        $orderId = $request->last_id;
-
-        $orders = OrderHistory::where('user_id', $userId)->where('pair_id', $pairId)->where('id', '>', $orderId)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
-
-        $response['message'] = '';
-        $response['status'] = 'ok';
-        $response['data'] = $orders;
-        return response()->json($response);
+        return OrderHistory::where('pair_id', $pair_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
     }
 
-    /**
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    private function updateBook(Request $request)
+    private function getUserOrders($user_id, $pair_id, $last_id = null)
     {
+        if ($user_id === null) {
+            return [];
+        }
 
+        if ($last_id !== null) {
+            return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+        }
+
+        return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+    }
+
+    private function getUserHistory($user_id, $pair_id, $last_id = null)
+    {
+        if ($user_id === null) {
+            return [];
+        }
+
+        if ($last_id !== null) {
+            return OrderHistory::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+        }
+
+        return OrderHistory::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+    }
+
+    private function getOrderBook($pair_id)
+    {
+        // Book of open orders for the actual pair
+        /*
+        Hay que buscar tambien la otra moneda para sumar la cantidad
+        BTC/USDT (SE VENDE BTC POR USDT o SE COMPRA USDT POR BTC)
+        SELLS (Total BTC)
+        BUYS (Total USDT)
+
+        La consulta debe devoler:BTC/USDT
+        precio(USDT), cantidad(BTC) total(USDT)
+        TRX/BTC
+        precio(BTC), cantidad(TRX) total(BTC) y UNION SUM(TRX)
+
+        SELECT oo.type, oo.price as 'price',
+        SUM(oo.amount) as 'sum',
+        ROUND(SUM(oo.amount)*oo.price, 8) as 'value',
+        (SELECT SUM(amount)
+        FROM `open_orders`
+        WHERE pair_id = 1 AND type='buy') as 'total'
+        FROM `open_orders` oo
+        WHERE pair_id = 1 AND type='buy'
+        GROUP BY price
+        ORDER BY price DESC
+
+         */
+//$buyOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'buy')->groupBy('price')->orderBy('price', 'DESC')->get();
+        $buy_orders = Order::select(
+            'price', DB::raw('SUM(amount) as "amount"'),
+            DB::raw('SUM(price) as "total"'),
+            DB::raw('(SELECT SUM(amount) FROM open_orders WHERE pair_id = ' . $pair_id . ' AND type="buy") as total_coins'))
+            ->where('pair_id', $pair_id)
+            ->where('type', 'buy')
+            ->groupBy('price')
+            ->orderBy('price', 'DESC')
+            ->get();
+
+        $total_buys = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'buy')->first()->total_coins;
+
+//$sellOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'sell')->groupBy('price')->orderBy('price', 'DESC')->get();
+        $sell_orders = Order::select(
+            'price', DB::raw('SUM(amount) as "amount"'),
+            DB::raw('SUM(price) as "total"'),
+            DB::raw('(SELECT SUM(amount) FROM open_orders WHERE pair_id = ' . $pair_id . ' AND type="sell") as total_coins'))
+            ->where('pair_id', $pair_id)
+            ->where('type', 'sell')
+            ->groupBy('price')
+            ->orderBy('price', 'DESC')
+            ->get();
+
+        $total_sells = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'sell')->first()->total_coins;
+
+        return [
+            'buy_orders' => $buy_orders,
+            'buy_total_coins' => $total_buys,
+            'sell_orders' => $sell_orders,
+            'sell_total_coins' => $total_sells,
+        ];
+    }
+
+    private function getBalance($user_id, $pair_id)
+    {
+        return [
+            'BTC' => '5.0000000',
+            'USDT' => '3000.000000',
+        ];
     }
 
     // Returns the user balance for the coin
@@ -233,6 +297,11 @@ class TradeController extends Controller
             Cookie::queue('theme', 'light', 60 * 24 * 4);
         }
 
+        $user_id = null;
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        }
+
         // Get the coin pair symbols
         $coinsPair = explode('-', $pair);
         // Get id from each coin
@@ -252,41 +321,22 @@ class TradeController extends Controller
             ->join('coins', 'markets.coin_id', '=', 'coins.id')
             ->get()->keyBy('symbol');
 
-        $userHistory = array();
-        $userOrders = array();
+        // User trade history for the actual coin he is trading
+        $user_history = $this->getUserHistory($user_id, $pair->id);
 
-        if (Auth::check()) {
-            // User trade history for the actual coin he is trading
-            $userHistory = OrderHistory::where('user_id', Auth::user()->id)->where('pair_id', $pair->id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+        // Open orders from the user
+        $user_orders = $this->getUserOrders($user_id, $pair->id);
 
-            // Open orders from the user
-            $userOrders = Order::where('user_id', Auth::user()->id)->where('pair_id', $pair->id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
-
-            // User balance
-            $balance = $this->updateBalances(Auth::user()->id, $coin1, $coin2);
-        }
+        // User balance
+        $balance = $this->getBalance($user_id, $pair->id);
 
         // Market history for the actual pair user is trading
-        $marketHistory = OrderHistory::where('pair_id', $pair->id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
+        $market_history = $this->getMarketHistory($pair->id);
 
-        // Book of open orders for the actual pair
-        /*
-        SELECT oo.price,
-        SUM(oo.amount) as 'amount',
-        ROUND(SUM(oo.amount)*oo.price, 8) as 'total'
-        FROM `open_orders` oo
-        WHERE pair_id = 5 AND type='buy'
-        GROUP BY price
-        ORDER BY price DESC
-         */
-        $buyOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'buy')->groupBy('price')->orderBy('price', 'DESC')->get();
-
-        $sellOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'sell')->groupBy('price')->orderBy('price', 'DESC')->get();
-
-        //$bookOrder = array('buys' => $buyOrders, 'sells' => $sellOrders);
+        $order_book = $this->getOrderBook($pair->id);
 
         // Array names
-        $names = array('settings', 'marketHistory', 'markets', 'userOrders', 'userHistory', 'pair', 'sellOrders', 'buyOrders', 'balance', 'coin1', 'coin2');
+        $names = array('order_book', 'settings', 'market_history', 'markets', 'user_orders', 'user_history', 'pair', 'balance', 'coin1', 'coin2');
 
         return view('exchange/trade')->with(compact($names));
     }

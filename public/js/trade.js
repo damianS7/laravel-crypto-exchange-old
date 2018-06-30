@@ -1,9 +1,6 @@
 $(document).ready(function () {
 	setInterval(function () {
-		//updateBook();
-		updateMarketHistory();
-		updateOrders();
-		updateFilled();
+		updateView();
 	}, 1000);
 
 	// User event when removing an open order
@@ -21,6 +18,55 @@ $(document).ready(function () {
 		addOrder('sell');
 	});
 
+	$("#order-form-container .form-control").on("change paste keyup", function () {
+		var id = $(this).attr('id')
+		if (id == 'input-buy-price' || id == 'input-buy-amount') {
+			var price = $('#order-form-container #input-buy-price').val();
+			var amount = $('#order-form-container #input-buy-amount').val();
+			var result = price * amount;
+			$('#order-form-container #total-buy').html(result.toFixed(8));
+		} else {
+			var price = $('#order-form-container #input-sell-price').val();
+			var amount = $('#order-form-container #input-sell-amount').val();
+			var result = price * amount;
+			$('#order-form-container #total-sell').html(result.toFixed(8));
+		}
+	});
+
+	$('body').on('click', '.clickable', function () {
+		var text = $(this).text();
+		if ($(this).hasClass('amount')) {
+			$('#order-form-container #input-buy-amount').val(text);
+			$('#order-form-container #input-buy-amount').change();
+			$('#order-form-container #input-sell-amount').val(text);
+			$('#order-form-container #input-sell-amount').change();
+		}
+
+		if ($(this).hasClass('price')) {
+			$('#order-form-container #input-buy-price').val(text);
+			$('#order-form-container #input-buy-price').change();
+			$('#order-form-container #input-sell-price').val(text);
+			$('#order-form-container #input-sell-price').change();
+		}
+
+		if ($(this).hasClass('balance')) {
+			var balance = text;
+			var id = $(this).attr('id')
+
+			if (id == 'buy-balance') {
+				var price = $('#order-form-container #input-buy-price').val();
+				var amount = balance / price;
+				$('#order-form-container #input-buy-amount').val(amount);
+				$('#order-form-container #total-buy').html(text);
+			}
+
+			if (id == 'sell-balance') {
+				var price = $('#order-form-container #input-sell-price').val();
+				$('#order-form-container #input-sell-amount').val(balance);
+				$('#order-form-container #input-sell-amount').change();
+			}
+		}
+	});
 });
 
 // Delete an order
@@ -48,7 +94,7 @@ function addOrder(type) {
 		'type': type,
 		'price': $('#input-' + type + '-price').val(),
 		'amount': $('#input-' + type + '-amount').val(),
-		'pair': $('#btn-' + type).attr('data-pair'),
+		'pair_id': $('#btn-' + type).attr('data-pair'),
 	};
 
 	ajax('/order/add', 'post', payload, function (response) {
@@ -62,104 +108,123 @@ function addOrder(type) {
 }
 
 // User open orders
-function updateOrders() {
-	var payload = {
-		'last_id': $('#table-user-orders > tbody > tr:first').attr('data-id'),
-		'pair_id': $('#btn-buy').attr('data-pair')
-	};
+function updateUserOpenOrders(data) {
+	if (!Array.isArray(data) || !data.length) {
+		return;
+	}
 
-	// Bug duplicated data
-	ajax('/order/open', 'get', payload, function (response) {
-		console.log(response);
-		response.data.forEach(function (order) {
-			var html = '<tr data-id="' + order.id + '">';
-			html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
-			html += '<td class="text-left amount">' + order.amount + '</td>';
-			html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
-			html += '<td class="text-left date">' + order.created_at + '</td>';
-			html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Delete</button></td>';
-			html += '</tr>';
-			var row = $(html);
+	data.forEach(function (order) {
+		var html = '<tr data-id="' + order.id + '">';
+		html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
+		html += '<td class="text-left amount">' + order.amount + '</td>';
+		html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
+		html += '<td class="text-left date">' + order.created_at + '</td>';
+		html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Delete</button></td>';
+		html += '</tr>';
+		var row = $(html);
 
-			row.hide();
-			$("#table-user-orders tbody tr:first").before(row);
-			row.fadeIn('slow');
-		});
+		row.hide();
+		$("#table-user-orders tbody tr:first").before(row);
+		row.fadeIn('slow');
 	});
 }
 
 // User filled history order
-function updateFilled() {
-	var payload = {
-		'last_id': $('#table-user-history > tbody > tr:first').attr('data-id'),
-		'pair_id': $('#btn-buy').attr('data-pair')
-	};
+function updateUserOrderHistory(data) {
+	if (!Array.isArray(data) || !data.length) {
+		return;
+	}
 
-	// Bug duplicated data
-	ajax('/order/filled', 'get', payload, function (response) {
-		//console.log(response);
-		response.data.forEach(function (order) {
-			var html = '<tr data-id="' + order.id + '">';
-			html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
-			html += '<td class="text-left amount">' + order.amount + '</td>';
-			html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
-			html += '<td class="text-right date">' + order.filled_at + '</td>';
-			html += '</tr>';
-			var row = $(html);
+	data.forEach(function (order) {
+		var html = '<tr data-id="' + order.id + '">';
+		html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
+		html += '<td class="text-left amount">' + order.amount + '</td>';
+		html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
+		html += '<td class="text-right date">' + order.filled_at + '</td>';
+		html += '</tr>';
+		var row = $(html);
 
-			row.hide();
-			$("#table-user-history tbody tr:first").before(row);
-			row.fadeIn('slow');
-		});
+		row.hide();
+		$("#table-user-history tbody tr:first").before(row);
+		row.fadeIn('slow');
 	});
 }
 
 // This only prints latest trades that are not already in the table
-function updateMarketHistory() {
-	var payload = {
-		'last_id': $('#table-market-history > tbody > tr:first').attr('data-id'),
-		'pair_id': $('#btn-sell').attr('data-pair'),
-	};
+function updateMarketHistory(data) {
+	if (!Array.isArray(data) || !data.length) {
+		return;
+	}
+	// We add every row to the market history
+	data.forEach(function (order) {
+		var html = '<tr data-id="' + order.id + '">';
+		html += '<td class="text-left"><span class="' + order.type + '-price clickable">' + order.price + '</span></td>';
+		html += '<td class="text-left amount">' + order.amount + '</td>';
+		html += '<td class="text-right date">' + order.filled_at + '</td>';
+		html += '</tr>';
+		var row = $(html);
 
-	ajax('/order/history', 'get', payload, function (response) {
-		//console.log(response);
-		if (response.data) {
-			// We add every row to the market history
-			response.data.forEach(function (order) {
-				var html = '<tr data-id="' + order.id + '">';
-				html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
-				html += '<td class="text-left amount">' + order.amount + '</td>';
-				html += '<td class="text-right date">' + order.filled_at + '</td>';
-				html += '</tr>';
-				var row = $(html);
-
-				row.hide();
-				$('#table-market-history > tbody > tr:first').before(row);
-				row.fadeIn('slow');
-			});
-		}
+		row.hide();
+		$('#table-market-history > tbody > tr:first').before(row);
+		row.fadeIn('slow');
 	});
 }
 
 
 // This functions update/repaint the book order when new data rows
 // are added.
-function updateBook() {
+function updateOrderBook(data) {
+	if (typeof data !== 'object') {
+		return;
+	}
+
+	// Actual with of the table
+	var tableWidth = $('#table-order-book').width();
+	var totalAmountSells = $('#sells-total-coins').val(); // .attr('data-sum-amount');
+	var totalAmountBuys = $('#buys-total-coins').val(); // .attr('data-sum-amount');
+
+	//$('#table-order-book tbody tr').each(function (tr) {
+	$('#book-buys tr').each(function (tr) {
+		// The row
+		var tr = this;
+		// The bar
+		var bar = $(tr).find('.bar');
+		// The amount of coins in the row
+		var trAmount = bar.attr('data-amount');
+		// Calc
+		var percentOfCoins = trAmount / totalAmountBuys;
+		// Bar width to set in pixels
+		var px = percentOfCoins * tableWidth;
+		// Set bar width
+		bar.width(px);
+	});
+
+
+	data['buy_orders'].forEach(function (row) {
+
+	});
+}
+
+function updateView() {
 	var payload = {
-		'last_id': $('#table-trade-history > tbody > tr:first').attr('data-id'),
+		'last_user_orders_id': $('#table-user-orders > tbody > tr:first').attr('data-id'),
+		'last_user_history_id': $('#table-user-history > tbody > tr:first').attr('data-id'),
+		'last_market_history_id': $('#table-market-history > tbody > tr:first').attr('data-id'),
 		'pair_id': $('#btn-sell').attr('data-pair'),
 	};
 
-	ajax('/order/book', 'get', payload, function (response) {
-		//console.log(response);
-		if (response.data) {
-			// We add every row to the market history
-			response.data.forEach(function (row) {
-
-			});
+	ajax('/update', 'get', payload, function (response) {
+		if (response.status == 'error') {
+			//console.log(response);
+			return;
 		}
+		updateMarketHistory(response.data['market_history']);
+		updateOrderBook(response.data['order_book']);
+		updateUserOpenOrders(response.data['user_orders']);
+		updateUserOrderHistory(response.data['user_history']);
 	});
 }
+
 
 // Just send the data using ajax throught the specified params
 // path: the route where data will be sent
