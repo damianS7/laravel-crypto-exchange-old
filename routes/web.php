@@ -15,12 +15,9 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index');
 
 // Exchange
-Route::post('/trade/ajax/order/add', 'TradeController@addOrder');
-Route::post('/trade/ajax/order/delete', 'TradeController@deleteOrder');
-Route::get('/trade/ajax/order/open', 'TradeController@openOrders');
-Route::get('/trade/ajax/order/filled', 'TradeController@filledOrders');
-Route::get('/trade/ajax/order/history', 'TradeController@orderHistory');
-Route::get('/trade/ajax/order/book', 'TradeController@orderBook');
+Route::post('/trade/ajax/order/add', 'TradeController@ajaxAddOrder');
+Route::post('/trade/ajax/order/delete', 'TradeController@ajaxDeleteOrder');
+Route::get('/trade/ajax/update', 'TradeController@ajaxUpdateView');
 
 Route::get('/trade/theme{theme?}', 'TradeController@changeTheme')->name('change-theme');
 Route::redirect('/trade/', '/trade/BTC-USDT', 302);
