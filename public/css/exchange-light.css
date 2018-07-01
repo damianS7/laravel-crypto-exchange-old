@@ -23,12 +23,18 @@ nav {
     background-color: #cefa75;
 }
 
+#book-buys .price,
+#book-buys .amount,
+#book-buys .total,
 #user-orders .buy-price,
 #user-history .buy-price,
 #market-history .buy-price {
     color: #8ec919;
 }
 
+#book-sells .total,
+#book-sells .amount,
+#book-sells .price,
 #user-orders .sell-price,
 #user-history .sell-price,
 #market-history .sell-price {

@@ -14,7 +14,7 @@
         </thead>
         <tbody id="book-sells">
             @foreach ($order_book['sell_orders'] as $order)
-            <tr class="selltext">
+            <tr>
                 <td class="text-left" style="position:relative">
                     <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
                     <span class="price clickable">{{ $order->price }}</span>
@@ -31,7 +31,7 @@
         </tbody>
         <tbody id="book-buys">
             @foreach ($order_book['buy_orders'] as $order)
-            <tr class="buytext">
+            <tr>
                 <td class="text-left" style="position:relative">
                     <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
                     <span class="price clickable">{{ $order->price }}</span>
