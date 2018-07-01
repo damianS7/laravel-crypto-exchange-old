@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
         //factory('App\Http\Models\Pair', 10)->create();
         //factory('App\Http\Models\Wallet', 200)->create();
         //factory('App\Http\Models\Deposit', 400)->create();
-        //factory('App\Http\Models\Order', 1000)->create();
-        factory('App\Http\Models\OrderHistory', 2000)->create();
+        //factory('App\Http\Models\Order', 8000)->create();
+        factory('App\Http\Models\OrderHistory', 10)->create();
     }
 }

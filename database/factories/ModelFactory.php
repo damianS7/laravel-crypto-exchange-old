@@ -74,22 +74,44 @@ $factory->define(Deposit::class, function (Faker $faker) {
 
 $factory->define(Order::class, function (Faker $faker) {
     return [
-        'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
-        'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
-        'price' => $faker->randomFloat(8, 0, 10000),
-        'amount' => $faker->randomFloat(8, 0, 10000),
+        'user_id' => 1,
+        'pair_id' => 1,
+        'price' => $faker->randomFloat(8, 9999, 9999),
+        'amount' => $faker->randomFloat(8, 50000, 90000),
         'type' => $faker->randomElement(['buy', 'sell']),
-        'created_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
+        'created_at' => date('Y-m-d H:i:s'),
     ];
 });
 
+/*$factory->define(Order::class, function (Faker $faker) {
+return [
+'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
+'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
+'price' => $faker->randomFloat(8, 0, 10000),
+'amount' => $faker->randomFloat(8, 0, 10000),
+'type' => $faker->randomElement(['buy', 'sell']),
+'created_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
+];
+});
+
+$factory->define(OrderHistory::class, function (Faker $faker) {
+return [
+'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
+'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
+'price' => $faker->randomFloat(8, 0, 10000),
+'amount' => $faker->randomFloat(8, 0, 10000),
+'type' => $faker->randomElement(['buy', 'sell']),
+'filled_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
+];
+});
+ */
 $factory->define(OrderHistory::class, function (Faker $faker) {
     return [
-        'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
-        'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
-        'price' => $faker->randomFloat(8, 0, 10000),
-        'amount' => $faker->randomFloat(8, 0, 10000),
+        'user_id' => 1,
+        'pair_id' => 1,
+        'price' => $faker->randomFloat(8, 9500, 9999),
+        'amount' => $faker->randomFloat(8, 5000, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
-        'filled_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
+        'filled_at' => date('Y-m-d H:i:s'),
     ];
 });
