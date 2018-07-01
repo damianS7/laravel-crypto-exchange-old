@@ -124,8 +124,8 @@ class TradeController extends Controller
     public function ajaxUpdateView(Request $request)
     {
         $market_history_last_id = $request->last_market_history_id;
-        $user_history_last_id = $request->last_market_history_id;
-        $user_orders_last_id = $request->last_market_history_id;
+        $user_history_last_id = $request->last_user_history_id;
+        $user_orders_last_id = $request->last_user_orders_id;
         $pair_id = $request->pair_id;
         $user_id = null;
 
@@ -216,7 +216,8 @@ class TradeController extends Controller
             ->where('type', 'buy')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
-            ->get();
+            ->get()
+            ->keyBy('price');
 
         $total_buys = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'buy')->first()->total_coins;
 
@@ -229,7 +230,8 @@ class TradeController extends Controller
             ->where('type', 'sell')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
-            ->get();
+            ->get()
+            ->keyBy('price');
 
         $total_sells = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'sell')->first()->total_coins;
 

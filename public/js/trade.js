@@ -79,7 +79,7 @@ function removeOrder(button) {
 		//console.log(response);
 		if (response.status == 'ok') {
 			// Remove order from user orders table
-			button.closest('tr').fadeOut('slow', function () {
+			button.closest('tr').fadeOut('fast', function () {
 				button.closest('tr').remove();
 			});
 		} else if (response.status == 'error') {
@@ -119,13 +119,13 @@ function updateUserOpenOrders(data) {
 		html += '<td class="text-left amount">' + order.amount + '</td>';
 		html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
 		html += '<td class="text-left date">' + order.created_at + '</td>';
-		html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Delete</button></td>';
+		html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Cancel</button></td>';
 		html += '</tr>';
 		var row = $(html);
 
 		row.hide();
 		$("#table-user-orders tbody tr:first").before(row);
-		row.fadeIn('slow');
+		row.fadeIn('fast');
 	});
 }
 
@@ -178,13 +178,95 @@ function updateOrderBook(data) {
 		return;
 	}
 
+	// Since we have 2 tbodys we iterate over them
+	$('#table-order-book tbody').each(function (tbody) {
+		// The current tbody we are in
+		var tbody = $(this).closest('tbody');
+
+		// Sell orders tbody is first so it will be the one we are in
+		var book = 'sell_orders';
+
+		// When we switch to book-buys tbody we need to read buy_orders array
+		if (tbody.attr('id') == 'book-buys') {
+			book = 'buy_orders';
+		}
+
+		// Total rows of the current tbody
+		var totalRows = $(this).find('tr').length;
+
+		// Iteration over all rows of the tbody
+		$(this).find('tr').each(function (rowIndex) {
+			// We get the span tag with the price set
+			var trPrice = $(this).find('.price').text();
+
+			// We try to find an element of the array with the same price of the rom
+			// this way we can update the amount and total of the rows with the same price
+			if (typeof data[book][trPrice] !== 'undefined') {
+				// The amount of coins in the data sent by server
+				var oamount = data[book][trPrice].amount;
+
+				// The a mount of coins in the row
+				var tramount = $(this).find('.amount').text();
+
+				// If the amounts are different, we update the row
+				// with the amount sent by the server
+				if (oamount != tramount) {
+					$(this).find('.amount').text(oamount);
+					$(this).find('.bar').attr('data-amount', oamount);
+				}
+
+				// We set the data of the array empty to ensure w
+				data[book][trPrice] = '';
+			} else {
+				// If the price in the row its not in the array, its means
+				// the order has been cancelled so we remove the row
+				$(this).remove();
+			}
+
+			for (var i in data[book]) {
+				if (data[book][i] != '') {
+					var order = data[book][i];
+
+					var rowHtml = '<tr>';
+					rowHtml += '<td class="text-left" style="position:relative"><div data-amount="' + order.amount + '" class="bar"></div><span class="price clickable">' + order.price + '</span></td>';
+					rowHtml += '<td class="text-center"><span class="amount clickable">' + order.amount + '</span></td>';
+					rowHtml += '<td class="text-right"><span class="total clickable">' + order.total + '</span></td>';
+					rowHtml += '</tr>';
+
+					if (parseFloat(order.price) > parseFloat(trPrice)) {
+						var row = $(rowHtml);
+						row.hide();
+						$(this).before(row);
+						row.fadeIn('slow');
+						data[book][i] = '';
+					} else if (rowIndex == totalRows - 1 && parseFloat(order.price) < parseFloat(trPrice)) {
+						var row = $(rowHtml);
+						row.hide();
+						$(this).after(row);
+						row.fadeIn('slow');
+						data[book][i] = '';
+					}
+				}
+			}
+		});
+	});
+	/*
+
+	*/
+	// Update total coins
+	$('#sells-total-coins').val(data['sell_total_coins']);
+	$('#buys-total-coins').val(data['buy_total_coins']);
+
 	// Actual with of the table
 	var tableWidth = $('#table-order-book').width();
-	var totalAmountSells = $('#sells-total-coins').val(); // .attr('data-sum-amount');
-	var totalAmountBuys = $('#buys-total-coins').val(); // .attr('data-sum-amount');
 
-	//$('#table-order-book tbody tr').each(function (tr) {
-	$('#book-buys tr').each(function (tr) {
+	// Amount total of coins
+	var totalAmountSells = $('#sells-total-coins').val();
+	var totalAmountBuys = $('#buys-total-coins').val();
+
+	// Print bars
+	$('#table-order-book tbody tr').each(function (index) {
+		var id = $(this).closest('tbody').attr('id');
 		// The row
 		var tr = this;
 		// The bar
@@ -192,16 +274,17 @@ function updateOrderBook(data) {
 		// The amount of coins in the row
 		var trAmount = bar.attr('data-amount');
 		// Calc
-		var percentOfCoins = trAmount / totalAmountBuys;
+		if (id == 'book-sells') {
+			var percentOfCoins = trAmount / totalAmountSells;
+		}
+
+		if (id == 'book-buys') {
+			var percentOfCoins = trAmount / totalAmountBuys;
+		}
 		// Bar width to set in pixels
 		var px = percentOfCoins * tableWidth;
 		// Set bar width
 		bar.width(px);
-	});
-
-
-	data['buy_orders'].forEach(function (row) {
-
 	});
 }
 
