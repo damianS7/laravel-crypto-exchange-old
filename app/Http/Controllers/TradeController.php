@@ -10,6 +10,7 @@ use App\Http\Models\Order;
 use App\Http\Models\OrderHistory;
 use App\Http\Models\Pair;
 use App\Http\Models\Setting;
+use App\Http\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,8 @@ class TradeController extends Controller
             $response['status'] = 'error';
             $response['message'] = 'Sorry order can not be removed.';
         }
+
+        //$response['message'] = 'Insuficient balance.';
 
         return response()->json($response);
     }
@@ -149,7 +152,7 @@ class TradeController extends Controller
     private function getMarketHistory($pair_id, $last_id = null)
     {
         if ($last_id !== null) {
-            return OrderHistory::where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
+            return OrderHistory::where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'ASC')->get();
         }
 
         return OrderHistory::where('pair_id', $pair_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
@@ -162,10 +165,10 @@ class TradeController extends Controller
         }
 
         if ($last_id !== null) {
-            return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+            return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('created_at', 'DESC')->orderBy('id', 'ASC')->limit(50)->get();
         }
 
-        return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+        return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->limit(50)->get();
     }
 
     private function getUserHistory($user_id, $pair_id, $last_id = null)
@@ -183,6 +186,7 @@ class TradeController extends Controller
 
     private function getOrderBook($pair_id)
     {
+        $limit = 50;
         // Book of open orders for the actual pair
         /*
         Hay que buscar tambien la otra moneda para sumar la cantidad
@@ -207,7 +211,7 @@ class TradeController extends Controller
         ORDER BY price DESC
 
          */
-//$buyOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'buy')->groupBy('price')->orderBy('price', 'DESC')->get();
+
         $buy_orders = Order::select(
             'price', DB::raw('SUM(amount) as "amount"'),
             DB::raw('SUM(price) as "total"'),
@@ -216,12 +220,10 @@ class TradeController extends Controller
             ->where('type', 'buy')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
+            ->limit($limit)
             ->get()
             ->keyBy('price');
 
-        $total_buys = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'buy')->first()->total_coins;
-
-//$sellOrders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('SUM(price) as "total"'))->where('pair_id', $pair->id)->where('type', 'sell')->groupBy('price')->orderBy('price', 'DESC')->get();
         $sell_orders = Order::select(
             'price', DB::raw('SUM(amount) as "amount"'),
             DB::raw('SUM(price) as "total"'),
@@ -230,25 +232,52 @@ class TradeController extends Controller
             ->where('type', 'sell')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
+            ->limit($limit)
             ->get()
             ->keyBy('price');
 
-        $total_sells = Order::selectRaw('SUM(amount) as "total_coins"')->where('pair_id', $pair_id)->where('type', 'sell')->first()->total_coins;
-
         return [
-            'buy_orders' => $buy_orders,
-            'buy_total_coins' => $total_buys,
-            'sell_orders' => $sell_orders,
-            'sell_total_coins' => $total_sells,
+            'book_buys' => $buy_orders,
+            'book_sells' => $sell_orders,
         ];
     }
 
-    private function getBalance($user_id, $pair_id)
+    /**
+     *
+     * @param  $user_id
+     * @param  Array $coins_id
+     * @return Array with the coins balances
+     */
+    private function getBalances($user_id, $coins_id)
     {
-        return [
-            'BTC' => '5.0000000',
-            'USDT' => '3000.000000',
-        ];
+        $balances = [];
+        foreach ($coins_id as $coin_id) {
+            $symbol = Coin::select('symbol')->where('id', $coin_id)->first()->symbol;
+            $balances[$symbol] = $this->getBalance($user_id, $coin_id);
+        }
+        return $balances;
+    }
+
+    /**
+     *
+     * @param  $user_id
+     * @param  $coin_id
+     * @return $balance with the coin balance
+     */
+    private function getBalance($user_id, $coin_id)
+    {
+        $deposits = Deposit::select(DB::raw('SUM(amount) as "amount"'))->where('user_id', $user_id)->where('coin_id', $coin_id)->where('status', 'confirmed')->first();
+
+        $withdrawals = Withdrawal::select(DB::raw('SUM(amount) as "amount"'))->where('user_id', $user_id)->where('coin_id', $coin_id)->where('status', 'confirmed')->first();
+
+        //$history = OrderHistory::select(DB::raw('SUM(amount) as "amount"'))->where('user_id', $user_id)->where('coin_id', $coin_id)->where('status', 'confirmed')->first();
+
+        //$orders = Order::select(DB::raw('SUM(amount) as "amount"'))->where('user_id', $user_id)->where('coin_id', $coin_id)->where('status', 'confirmed')->first();
+
+        //$balance = $deposits->amount - $withdrawals->amount - $orders->amount - $history->amount;
+        $balance = $deposits->amount - $withdrawals->amount;
+
+        return $balance;
     }
 
     // Returns the user balance for the coin
@@ -330,7 +359,7 @@ class TradeController extends Controller
         $user_orders = $this->getUserOrders($user_id, $pair->id);
 
         // User balance
-        $balance = $this->getBalance($user_id, $pair->id);
+        $balance = $this->getBalances($user_id, [1, 2]);
 
         // Market history for the actual pair user is trading
         $market_history = $this->getMarketHistory($pair->id);
