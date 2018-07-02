@@ -15,26 +15,26 @@ nav {
     color: #ff007a;
 }
 
-#book-sells .bar {
+#book_sells .bar {
     background-color: #ff6fb5;
 }
 
-#book-buys .bar {
+#book_buys .bar {
     background-color: #cefa75;
 }
 
-#book-buys .price,
-#book-buys .amount,
-#book-buys .total,
+#book_buys .price,
+#book_buys .amount,
+#book_buys .total,
 #user-orders .buy-price,
 #user-history .buy-price,
 #market-history .buy-price {
     color: #8ec919;
 }
 
-#book-sells .total,
-#book-sells .amount,
-#book-sells .price,
+#book_sells .total,
+#book_sells .amount,
+#book_sells .price,
 #user-orders .sell-price,
 #user-history .sell-price,
 #market-history .sell-price {

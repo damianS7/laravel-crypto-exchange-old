@@ -12,8 +12,8 @@
                 <th class="text-right" scope="col">Total({{ $coin2->symbol }})</th>
             </tr>
         </thead>
-        <tbody id="book-sells">
-            @foreach ($order_book['sell_orders'] as $order)
+        <tbody id="book_sells" data-total-coins="{{ @$order_book['sell_total_coins'] }}">
+            @foreach ($order_book['book_sells'] as $order)
             <tr>
                 <td class="text-left" style="position:relative">
                     <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
@@ -27,10 +27,9 @@
                 </td>
             </tr>
             @endforeach
-            <input id="sells-total-coins" value="{{ $order_book['sell_total_coins'] }}" type="hidden">
         </tbody>
-        <tbody id="book-buys">
-            @foreach ($order_book['buy_orders'] as $order)
+        <tbody id="book_buys" data-total-coins="{{ @$order_book['buy_total_coins'] }}">
+            @foreach ($order_book['book_buys'] as $order)
             <tr>
                 <td class="text-left" style="position:relative">
                     <div data-amount="{{ $order->amount }}" data-total="{{ $order->total }}" class="bar"></div>
@@ -44,7 +43,6 @@
                 </td>
             </tr>
             @endforeach
-            <input id="buys-total-coins" value="{{ $order_book['buy_total_coins'] }}" type="hidden">
         </tbody>
     </table>
 </div>
