@@ -8,26 +8,26 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="text-left" scope="col">Price</th>
-                <th class="text-left" scope="col">Amount</th>
-                <th class="text-left" scope="col">Type</th>
-                <th class="text-right" scope="col">Filled at</th>
+                <th name="price" scope="col">Price</th>
+                <th name="amount" scope="col">Amount</th>
+                <th name="type" scope="col">Type</th>
+                <th name="date" class="text-right" scope="col">Filled at</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($user_history as $order)
             <tr data-id="{{ $order->id }}">
-                <td class="{{ $order->type }}-price">
-                    <span>{{ $order->price }}</span>
+                <td name="price">
+                    <span class="{{ $order->type }}-price">{{ $order->price }}</span>
                 </td>
-                <td class="amount">
-                    <span>{{ $order->amount }}</span>
+                <td name="amount">
+                    <span class="amount">{{ $order->amount }}</span>
                 </td>
-                <td class="{{ $order->type }}-price">
-                    <span>{{ $order->type }}</span>
+                <td name="type">
+                    <span class="{{ $order->type }}-price">{{ $order->type }}</span>
                 </td>
-                <td class="text-right date">
-                    <span>{{ $order->filled_at }}</span>
+                <td name="date" class="text-right">
+                    <span class="date">{{ $order->filled_at }}</span>
                 </td>
             </tr>
             @endforeach

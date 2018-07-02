@@ -38,10 +38,43 @@
 	max-height: 500px;
 }
 
+#user-history>table th[name=price],
+#user-history>table td[name=price],
+#user-history>table th[name=amount],
+#user-history>table td[name=amount] {
+	width: 35%
+}
+
+#user-history>table th[name=type],
+#user-history>table td[name=type] {
+	width: 10%
+}
+
 #pair-menu>table,
 #order-book>table,
 #market-history>table {
 	font-size: 0.65em;
+}
+
+#user-history>table th[name=date],
+#user-history>table td[name=date],
+#user-orders>table th[name=date],
+#user-orders>table td[name=date] {
+	width: 20%;
+}
+
+#user-orders>table th[name=price],
+#user-orders>table td[name=price],
+#user-orders>table th[name=amount],
+#user-orders>table td[name=amount] {
+	width: 20%;
+}
+
+#user-orders>table th[name=button],
+#user-orders>table td[name=button],
+#user-orders>table th[name=type],
+#user-orders>table td[name=type] {
+	width: 10%;
 }
 
 #user-history>table th,
@@ -72,12 +105,14 @@
 #order-book>table>tbody {
 	min-height: 275px;
 	max-height: 275px;
+	overflow-y: hidden;
 }
 
 tbody {
 	display: block;
 	height: 100%;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: auto;
 }
 
 thead,

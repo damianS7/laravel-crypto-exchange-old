@@ -8,7 +8,7 @@
         <thead>
             <tr>
                 <th class="text-left" scope="col">Price({{ $coin2->symbol }})</th>
-                <th class="text-left" scope="col">Amount({{ $coin1->symbol }})</th>
+                <th class="text-center" scope="col">Amount({{ $coin1->symbol }})</th>
                 <th class="text-right" scope="col">Total({{ $coin2->symbol }})</th>
             </tr>
         </thead>

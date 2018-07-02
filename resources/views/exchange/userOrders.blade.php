@@ -9,29 +9,29 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="text-left" scope="col">Price</th>
-                <th class="text-left" scope="col">Amount</th>
-                <th class="text-left" scope="col">Type</th>
-                <th class="text-left" scope="col">Date</th>
-                <th class="text-right" scope="col">Action</th>
+                <th name="price" class="text-left" scope="col">Price</th>
+                <th name="amount" class="text-left" scope="col">Amount</th>
+                <th name="type" class="text-left" scope="col">Type</th>
+                <th name="date" class="text-left" scope="col">Date</th>
+                <th name="button" class="text-right" scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($user_orders as $order)
                 <tr data-id="{{ $order->id }}">
-                    <td class="{{ $order->type }}-price">
-                        <span>{{ $order->price }}</span>
+                    <td name="price">
+                        <span class="{{ $order->type }}-price">{{ $order->price }}</span>
                     </td>
-                    <td class="amount">
-                        <span>{{ $order->amount }}</span>
+                    <td name="amount">
+                        <span class="amount">{{ $order->amount }}</span>
                     </td>
-                    <td class="{{ $order->type }}-price">
-                        <span>{{ $order->type }}</span>
+                    <td name="type">
+                        <span class="{{ $order->type }}-price">{{ $order->type }}</span>
                     </td>
-                    <td class="date">
-                        <span>{{ $order->created_at }}</span>
+                    <td name="date">
+                        <span class="date">{{ $order->created_at }}</span>
                     </td>
-                    <td class="text-right">
+                    <td name="button" class="text-right">
                         <button type="submit" data-id="{{ $order->id }}" class="btn btn-sm btn-danger cancel-order-button">Cancel</button>
                     </td>
                 </tr>
