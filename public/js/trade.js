@@ -121,12 +121,11 @@ function updateUserOpenOrders(data) {
 
 	data.forEach(function (order) {
 		var html = '<tr data-id="' + order.id + '">';
-		html += '<td class="text-left ' + order.type + '-price"">' + order.price + '</td>';
-		html += '<td class="text-left amount">' + order.amount + '</td>';
-		html += '<td class="text-left ' + order.type + '-price">' + order.type + '</td>';
-		html += '<td class="text-left date">' + order.created_at + '</td>';
-		html += '<td class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Cancel</button></td>';
-		html += '</tr>';
+		html += '<td name="price"><span class="' + order.type + '-price">' + order.price + '</span></td>';
+		html += '<td name="amount"><span class="amount">' + order.amount + '</span></td>';
+		html += '<td name="type"><span class="' + order.type + '-price">' + order.type + '</span></td>';
+		html += '<td name="date"><span>' + order.created_at + '</span></td>';
+		html += '<td name="button" class="text-right"><button type="submit" data-id="' + order.id + '" class="btn btn-sm btn-danger cancel-order-button">Cancel</button></td></tr>';
 		var row = $(html);
 		row.hide();
 		$("#table-user-orders tbody").prepend(row);
@@ -216,7 +215,7 @@ function updateOrderBook(data) {
 			bodyRows.remove();
 		}
 
-		console.log('starting loop for tbody ' + book);
+		//console.log('starting loop for tbody ' + book);
 		// We iterate over the orders array given by the server
 		for (i in data[book]) {
 			// The data order from the array
@@ -225,11 +224,7 @@ function updateOrderBook(data) {
 			// If the order book is empty we just add the first order from the array
 			// as the first row so we have now rows to iterate. then we past to the next element.
 			if (totalRows == 0) {
-				rowHtml = getBookRow(order.price, order.amount, order.total);
-				var row = $(rowHtml);
-				row.hide();
-				$(this).prepend(row);
-				row.fadeIn('fast');
+				$(this).prepend(getBookRow(order.price, order.amount, order.total));
 				continue;
 			}
 
@@ -241,48 +236,68 @@ function updateOrderBook(data) {
 				trPrice = spanPrice.text();
 				trAmount = spanAmount.text();
 
-				console.log('comparing: ' + order.price + ' vs ' + trPrice);
+				//console.log('comparing: ' + order.price + ' vs ' + trPrice);
 				// if there is no row with this price in the array
 				// order has been canceled so we deleted from the book
 				if (typeof data[book][trPrice] === 'undefined') {
-					console.log('order not found, ' + order.price + ' removing from tbody');
-					$(this).remove();
+					//console.log('order not found, ' + order.price + ' removing from tbody');
+					//$(this).remove();
+					var deleteRow = $(this);
+					$(this).fadeTo(1000, 0.05, function () {
+						deleteRow.remove();
+					});
 				}
 
 				// Do this when array price and tr price are equal
 				if (mirrorBook[book][order.price] != '' && parseFloat(order.price) == parseFloat(trPrice)) {
-					console.log('order found in the book there is not need to continue checking again this order.');
+					//console.log('order found in the book there is not need to continue checking again this order.');
+					//data[book][order.price] = '';
 					mirrorBook[book][order.price] = '';
 
 					// If amounts are different we update the row
 					if (order.amount != trAmount) {
 						spanAmount.text(order.amount);
 						bar.attr('data-amount', order.amount);
+
+						// Animation for the row updated
+						$(this).fadeTo(100, 0.6, function () {
+							$(this).fadeTo(500, 1);
+						});
 					}
 				}
 
 				// Do this when we have to add a new row anywhere but at start
 				if (mirrorBook[book][order.price] != '' && parseFloat(order.price) > parseFloat(trPrice)) {
-					console.log('adding ' + order.price + ' vs ' + trPrice);
+					//console.log('adding ' + order.price + ' vs ' + trPrice);
 					mirrorBook[book][order.price] = '';
 
 					rowHtml = getBookRow(order.price, order.amount, order.total);
 					var row = $(rowHtml);
-					row.hide();
+					//row.hide();
 					$(this).before(row);
-					row.fadeIn('fast');
+					//row.fadeIn('fast');
+
+					// Animation for the row updated
+					$(this).fadeTo(100, 0.6, function () {
+						$(this).fadeTo(500, 1);
+					});
 				}
 
 				// Do this when we have to add a new row at start
 				if (mirrorBook[book][order.price] != '' && parseFloat(order.price) < parseFloat(trPrice) && rowIndex == totalRows - 1) {
-					console.log('adding ' + order.price + ' vs ' + trPrice);
+					//console.log('adding ' + order.price + ' vs ' + trPrice);
 					mirrorBook[book][order.price] = '';
 
 					rowHtml = getBookRow(order.price, order.amount, order.total);
 					var row = $(rowHtml);
-					row.hide();
+					//row.hide();
 					$(this).after(row);
-					row.fadeIn('fast');
+					//row.fadeIn('fast');
+
+					// Animation for the row updated
+					$(this).fadeTo(100, 0.6, function () {
+						$(this).fadeTo(500, 1);
+					});
 				}
 
 			});
@@ -290,7 +305,7 @@ function updateOrderBook(data) {
 			// We sum the coins order
 			total_coins += parseFloat(order.amount);
 		}
-		console.log('end loop');
+		//console.log('end loop');
 		// Update the total coins at the end
 		tbody.attr('data-total-coins', total_coins);
 	});
@@ -311,6 +326,9 @@ function updateOrderBook(data) {
 
 		// Bar width to set in pixels
 		px = percentOfCoins * tableWidth;
+		if (px > tableWidth) {
+			px = tableWidth;
+		}
 		// Set bar width
 		bar.width(px);
 	});
@@ -329,6 +347,7 @@ function updateView() {
 			//console.log(response);
 			return;
 		}
+
 		updateMarketHistory(response.data['market_history']);
 		updateOrderBook(response.data['order_book']);
 		updateUserOpenOrders(response.data['user_orders']);
