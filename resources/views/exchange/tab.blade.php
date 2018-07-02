@@ -7,7 +7,7 @@
 			<a class="nav-link" href="#tab-2" data-toggle="tab">My History</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="#tab-2" data-toggle="tab">Market depth</a>
+			<a class="nav-link" href="#tab-3" data-toggle="tab">Chat</a>
 		</li>
 	</ul>
 
@@ -17,6 +17,9 @@
 		</div>
 		<div class="tab-pane" id="tab-2">
 			@include('exchange.userHistory')
+		</div>
+		<div class="tab-pane" id="tab-3">
+			@include('exchange.chat')
 		</div>
 	</div>
 </div>

@@ -63,12 +63,6 @@
                 @include('exchange.orderForm')
             </div>
         </div>
-
-        <div id="row3" class="row">
-            <div id="chat-container" class="col-sm-7">
-                @include('exchange.chat')
-            </div>
-        </div>
     </div>
     <script src="{{ asset('js/trade.js') }}"></script>
 </body>
