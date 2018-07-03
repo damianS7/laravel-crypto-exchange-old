@@ -34,7 +34,7 @@
 	min-width: 1px;
 }
 
-#pair-menu>table>tbody {
+#market-menu>table>tbody {
 	max-height: 500px;
 }
 
@@ -50,7 +50,7 @@
 	width: 10%
 }
 
-#pair-menu>table,
+#market-menu>table,
 #order-book>table,
 #market-history>table {
 	font-size: 0.65em;
@@ -84,8 +84,8 @@
 	padding: 1px 0 1px 0;
 }
 
-#pair-menu>table th,
-#pair-menu>table td,
+#market-menu>table th,
+#market-menu>table td,
 #order-book>table th,
 #order-book>table td,
 #market-history>table th,

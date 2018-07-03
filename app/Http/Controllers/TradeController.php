@@ -8,7 +8,6 @@ use App\Http\Models\Deposit;
 use App\Http\Models\Market;
 use App\Http\Models\Order;
 use App\Http\Models\OrderHistory;
-use App\Http\Models\Pair;
 use App\Http\Models\Setting;
 use App\Http\Models\Withdrawal;
 use Illuminate\Http\Request;
@@ -24,12 +23,12 @@ class TradeController extends Controller
      * Add a new open order
      * @return \App\Http\Models\Order
      */
-    private function addOrder($userId, $pairId, $price, $amount, $type)
+    private function addOrder($user_id, $market_id, $price, $amount, $type)
     {
         // Balance must be checked before put the order
         $order = new Order;
-        $order->user_id = $userId;
-        $order->pair_id = $pairId;
+        $order->user_id = $user_id;
+        $order->market_id = $market_id;
         $order->price = $price;
         $order->amount = $amount;
         $order->type = $type;
@@ -57,7 +56,7 @@ class TradeController extends Controller
             return response()->json($response);
         }
 
-        $order = $this->addOrder(Auth::user()->id, $request->pair_id, $request->price, $request->amount, $request->type);
+        $order = $this->addOrder(Auth::user()->id, $request->market_id, $request->price, $request->amount, $request->type);
 
         if ($order->exists) {
             $response['data'] = $order;
@@ -129,7 +128,7 @@ class TradeController extends Controller
         $market_history_last_id = $request->last_market_history_id;
         $user_history_last_id = $request->last_user_history_id;
         $user_orders_last_id = $request->last_user_orders_id;
-        $pair_id = $request->pair_id;
+        $market_id = $request->market_id;
         $user_id = null;
 
         if (Auth::check()) {
@@ -139,84 +138,61 @@ class TradeController extends Controller
         $response = [
             'status' => 'ok',
             'message' => '',
+            'received' => '',
             'data' => [
-                'market_history' => $this->getMarketHistory($pair_id, $market_history_last_id),
-                'order_book' => $this->getOrderBook($pair_id),
-                'user_history' => $this->getUserHistory($user_id, $pair_id, $user_history_last_id),
-                'user_orders' => $this->getUserOrders($user_id, $pair_id, $user_orders_last_id),
+                'market_history' => $this->getMarketHistory($market_id, $market_history_last_id),
+                'order_book' => $this->getOrderBook($market_id),
+                'user_history' => $this->getUserHistory($user_id, $market_id, $user_history_last_id),
+                'user_orders' => $this->getUserOrders($user_id, $market_id, $user_orders_last_id),
             ],
         ];
         return response()->json($response);
     }
 
-    private function getMarketHistory($pair_id, $last_id = null)
+    private function getMarketHistory($market_id, $last_id = null)
     {
         if ($last_id !== null) {
-            return OrderHistory::where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'ASC')->get();
+            return OrderHistory::where('market_id', $market_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
         }
 
-        return OrderHistory::where('pair_id', $pair_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
+        //SELECT * FROM `order_history` WHERE market_id = 1 ORDER BY `filled_at` DESC, id ASC
+        return OrderHistory::where('market_id', $market_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->limit('50')->get();
     }
 
-    private function getUserOrders($user_id, $pair_id, $last_id = null)
+    private function getUserOrders($user_id, $market_id, $last_id = null)
     {
         if ($user_id === null) {
             return [];
         }
 
         if ($last_id !== null) {
-            return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('created_at', 'DESC')->orderBy('id', 'ASC')->limit(50)->get();
+            return Order::where('user_id', $user_id)->where('market_id', $market_id)->where('id', '>', $last_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->limit(50)->get();
         }
 
-        return Order::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->limit(50)->get();
+        return Order::where('user_id', $user_id)->where('market_id', $market_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->limit(50)->get();
     }
 
-    private function getUserHistory($user_id, $pair_id, $last_id = null)
+    private function getUserHistory($user_id, $market_id, $last_id = null)
     {
         if ($user_id === null) {
             return [];
         }
 
         if ($last_id !== null) {
-            return OrderHistory::where('user_id', $user_id)->where('pair_id', $pair_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+            return OrderHistory::where('user_id', $user_id)->where('market_id', $market_id)->where('id', '>', $last_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
         }
 
-        return OrderHistory::where('user_id', $user_id)->where('pair_id', $pair_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
+        return OrderHistory::where('user_id', $user_id)->where('market_id', $market_id)->orderBy('filled_at', 'DESC')->orderBy('id', 'DESC')->get();
     }
 
-    private function getOrderBook($pair_id)
+    private function getOrderBook($market_id)
     {
-        $limit = 50;
-        // Book of open orders for the actual pair
-        /*
-        Hay que buscar tambien la otra moneda para sumar la cantidad
-        BTC/USDT (SE VENDE BTC POR USDT o SE COMPRA USDT POR BTC)
-        SELLS (Total BTC)
-        BUYS (Total USDT)
+        $limit = 25;
+        //select type,price, SUM(amount) as "amount", ROUND(SUM(amount)*price, 8) as "total" from `open_orders` where `market_id` = 1 group by price,type
 
-        La consulta debe devoler:BTC/USDT
-        precio(USDT), cantidad(BTC) total(USDT)
-        TRX/BTC
-        precio(BTC), cantidad(TRX) total(BTC) y UNION SUM(TRX)
+        // Book of open orders for the actual market
 
-        SELECT oo.type, oo.price as 'price',
-        SUM(oo.amount) as 'sum',
-        ROUND(SUM(oo.amount)*oo.price, 8) as 'value',
-        (SELECT SUM(amount)
-        FROM `open_orders`
-        WHERE pair_id = 1 AND type='buy') as 'total'
-        FROM `open_orders` oo
-        WHERE pair_id = 1 AND type='buy'
-        GROUP BY price
-        ORDER BY price DESC
-
-         */
-
-        $buy_orders = Order::select(
-            'price', DB::raw('SUM(amount) as "amount"'),
-            DB::raw('SUM(price) as "total"'),
-            DB::raw('(SELECT SUM(amount) FROM open_orders WHERE pair_id = ' . $pair_id . ' AND type="buy") as total_coins'))
-            ->where('pair_id', $pair_id)
+        $buy_orders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('ROUND(SUM(amount)*price, 8) as "total"'))->where('market_id', $market_id)
             ->where('type', 'buy')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
@@ -224,11 +200,7 @@ class TradeController extends Controller
             ->get()
             ->keyBy('price');
 
-        $sell_orders = Order::select(
-            'price', DB::raw('SUM(amount) as "amount"'),
-            DB::raw('SUM(price) as "total"'),
-            DB::raw('(SELECT SUM(amount) FROM open_orders WHERE pair_id = ' . $pair_id . ' AND type="sell") as total_coins'))
-            ->where('pair_id', $pair_id)
+        $sell_orders = Order::select('price', DB::raw('SUM(amount) as "amount"'), DB::raw('ROUND(SUM(amount)*price, 8) as "total"'))->where('market_id', $market_id)
             ->where('type', 'sell')
             ->groupBy('price')
             ->orderBy('price', 'DESC')
@@ -237,9 +209,10 @@ class TradeController extends Controller
             ->keyBy('price');
 
         return [
-            'book_buys' => $buy_orders,
-            'book_sells' => $sell_orders,
+            'buy' => $buy_orders,
+            'sell' => $sell_orders,
         ];
+
     }
 
     /**
@@ -281,16 +254,16 @@ class TradeController extends Controller
     }
 
     // Returns the user balance for the coin
-    private function updateBalances($userId, $coin1, $coin2)
+    private function updateBalances($user_id, $coin1, $coin2)
     {
         $b1 = 0.003;
         $b2 = 1.555;
-        $depositsCoin1 = Deposit::where('status', 'confirmed')->where('user_id', $userId)->where('coin_id', $coin1->id);
-        $depositsCoin2 = Deposit::where('status', 'confirmed')->where('user_id', $userId)->where('coin_id', $coin2->id);
-        //$buyOrdersCoin1 = Order::where('type', 'buy')->where('user_id', $userId)->where('coin_id', $coin1->id);
-        //$sellOrdersCoin1 = Order::where('type', 'sell')->where('user_id', $userId)->where('coin_id', $coin1->id);
-        //$sellHistoryCoin1 = OrderHistory::where('type', 'sell')->where('user_id', $userId)->where('coin_id', $coin1->id);
-        //$buyHistoryCoin1 = OrderHistory::where('type', 'sell')->where('user_id', $userId)->where('coin_id', $coin1->id);
+        $depositsCoin1 = Deposit::where('status', 'confirmed')->where('user_id', $user_id)->where('coin_id', $coin1->id);
+        $depositsCoin2 = Deposit::where('status', 'confirmed')->where('user_id', $user_id)->where('coin_id', $coin2->id);
+        //$buyOrdersCoin1 = Order::where('type', 'buy')->where('user_id', $user_id)->where('coin_id', $coin1->id);
+        //$sellOrdersCoin1 = Order::where('type', 'sell')->where('user_id', $user_id)->where('coin_id', $coin1->id);
+        //$sellHistoryCoin1 = OrderHistory::where('type', 'sell')->where('user_id', $user_id)->where('coin_id', $coin1->id);
+        //$buyHistoryCoin1 = OrderHistory::where('type', 'sell')->where('user_id', $user_id)->where('coin_id', $coin1->id);
 
         //foreach ($buyHistoryCoin1 as $bho) {
         //    $b1 += $bho->amount;
@@ -320,7 +293,7 @@ class TradeController extends Controller
         //if exists return true else false
     }
 
-    public function index(Request $request, $pair = null)
+    public function index(Request $request, $market = null)
     {
         // Check if cookie theme is set
         if (empty(Cookie::get('theme'))) {
@@ -333,41 +306,41 @@ class TradeController extends Controller
             $user_id = Auth::user()->id;
         }
 
-        // Get the coin pair symbols
-        $coinsPair = explode('-', $pair);
+        // Get the coin market symbols
+        $marketGET = explode('-', $market);
         // Get id from each coin
         // Also firstOrFail will throw 'page dont exist' message in user browser if not founded in db
-        $coin1 = Coin::where('symbol', $coinsPair[0])->firstOrFail();
-        $coin2 = Coin::where('symbol', $coinsPair[1])->firstOrFail();
-        $market = Market::where('coin_id', $coin2->id)->firstOrFail();
+        $coin1 = Coin::where('symbol', $marketGET[0])->firstOrFail();
+        $coin2 = Coin::where('symbol', $marketGET[1])->firstOrFail();
+        $market = Market::where('coin_currency_id', $coin1->id)->where('coin_market_id', $coin2->id)->firstOrFail();
 
         //return $coin1->symbol . ' con id ' . $coin1->id . ' ' . $coin2->symbol . ' con id ' . $coin2->id . ' y market id ' . $market->id;
-        $pair = Pair::where('coin_id', $coin1->id)->where('market_id', $market->id)->firstOrFail();
+        //$pair = Pair::where('coin_id', $coin1->id)->where('market_id', $market->id)->firstOrFail();
 
         // Needed settings
         $settings = Setting::all()->keyBy('name');
 
         // Trade markets (which constains also pairs)
         $markets = Market::select('markets.*', 'coins.symbol')
-            ->join('coins', 'markets.coin_id', '=', 'coins.id')
+            ->join('coins', 'markets.coin_market_id', '=', 'coins.id')
             ->get()->keyBy('symbol');
 
         // User trade history for the actual coin he is trading
-        $user_history = $this->getUserHistory($user_id, $pair->id);
+        $user_history = $this->getUserHistory($user_id, $market->id);
 
         // Open orders from the user
-        $user_orders = $this->getUserOrders($user_id, $pair->id);
+        $user_orders = $this->getUserOrders($user_id, $market->id);
 
         // User balance
         $balance = $this->getBalances($user_id, [1, 2]);
 
         // Market history for the actual pair user is trading
-        $market_history = $this->getMarketHistory($pair->id);
+        $market_history = $this->getMarketHistory($market->id);
 
-        $order_book = $this->getOrderBook($pair->id);
+        $order_book = $this->getOrderBook($market->id);
 
         // Array names
-        $names = array('order_book', 'settings', 'market_history', 'markets', 'user_orders', 'user_history', 'pair', 'balance', 'coin1', 'coin2');
+        $names = array('order_book', 'settings', 'market_history', 'markets', 'user_orders', 'user_history', 'pair', 'balance', 'coin1', 'coin2', 'market');
 
         return view('exchange/trade')->with(compact($names));
     }
