@@ -5,7 +5,6 @@ use App\Http\Models\Deposit;
 use App\Http\Models\Market;
 use App\Http\Models\Order;
 use App\Http\Models\OrderHistory;
-use App\Http\Models\Pair;
 use App\Http\Models\Wallet;
 use App\User;
 use Faker\Generator as Faker;
@@ -42,16 +41,17 @@ $factory->define(Coin::class, function (Faker $faker) {
 
 $factory->define(Market::class, function (Faker $faker) {
     return [
-        'coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
+        'traded_coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
+        'market_coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
     ];
 });
 
-$factory->define(Pair::class, function (Faker $faker) {
-    return [
-        'coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
-        'market_id' => $faker->randomElement(Market::pluck('id')->toArray()),
-    ];
-});
+/*$factory->define(Pair::class, function (Faker $faker) {
+return [
+'coin_id' => $faker->randomElement(Coin::pluck('id')->toArray()),
+'market_id' => $faker->randomElement(Market::pluck('id')->toArray()),
+];
+});*/
 
 $factory->define(Wallet::class, function (Faker $faker) {
     return [
@@ -75,8 +75,8 @@ $factory->define(Deposit::class, function (Faker $faker) {
 $factory->define(Order::class, function (Faker $faker) {
     return [
         'user_id' => 1,
-        'pair_id' => 1,
-        'price' => $faker->randomFloat(8, 9999, 9999),
+        'market_id' => 1,
+        'price' => $faker->randomFloat(8, 9998, 9999),
         'amount' => $faker->randomFloat(8, 50000, 90000),
         'type' => $faker->randomElement(['buy', 'sell']),
         'created_at' => date('Y-m-d H:i:s'),
@@ -86,7 +86,7 @@ $factory->define(Order::class, function (Faker $faker) {
 /*$factory->define(Order::class, function (Faker $faker) {
 return [
 'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
-'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
+'market_id' => $faker->randomElement(Market::pluck('id')->toArray()),
 'price' => $faker->randomFloat(8, 0, 10000),
 'amount' => $faker->randomFloat(8, 0, 10000),
 'type' => $faker->randomElement(['buy', 'sell']),
@@ -97,19 +97,20 @@ return [
 $factory->define(OrderHistory::class, function (Faker $faker) {
 return [
 'user_id' => $faker->randomElement(User::pluck('id')->toArray()),
-'pair_id' => $faker->randomElement(Pair::pluck('id')->toArray()),
+'market_id' => $faker->randomElement(Market::pluck('id')->toArray()),
 'price' => $faker->randomFloat(8, 0, 10000),
 'amount' => $faker->randomFloat(8, 0, 10000),
 'type' => $faker->randomElement(['buy', 'sell']),
 'filled_at' => date('Y-m-d H:i:s', rand(1260099000, 1600000000)),
 ];
 });
+
  */
 $factory->define(OrderHistory::class, function (Faker $faker) {
     return [
         'user_id' => 1,
-        'pair_id' => 1,
-        'price' => $faker->randomFloat(8, 9500, 9999),
+        'market_id' => 1,
+        'price' => $faker->randomFloat(8, 11500, 52000),
         'amount' => $faker->randomFloat(8, 5000, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
         'filled_at' => date('Y-m-d H:i:s'),

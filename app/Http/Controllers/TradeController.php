@@ -312,7 +312,7 @@ class TradeController extends Controller
         // Also firstOrFail will throw 'page dont exist' message in user browser if not founded in db
         $coin1 = Coin::where('symbol', $marketGET[0])->firstOrFail();
         $coin2 = Coin::where('symbol', $marketGET[1])->firstOrFail();
-        $market = Market::where('coin_currency_id', $coin1->id)->where('coin_market_id', $coin2->id)->firstOrFail();
+        $market = Market::where('traded_coin_id', $coin1->id)->where('market_coin_id', $coin2->id)->firstOrFail();
 
         //return $coin1->symbol . ' con id ' . $coin1->id . ' ' . $coin2->symbol . ' con id ' . $coin2->id . ' y market id ' . $market->id;
         //$pair = Pair::where('coin_id', $coin1->id)->where('market_id', $market->id)->firstOrFail();
@@ -322,7 +322,7 @@ class TradeController extends Controller
 
         // Trade markets (which constains also pairs)
         $markets = Market::select('markets.*', 'coins.symbol')
-            ->join('coins', 'markets.coin_market_id', '=', 'coins.id')
+            ->join('coins', 'markets.market_coin_id', '=', 'coins.id')
             ->get()->keyBy('symbol');
 
         // User trade history for the actual coin he is trading

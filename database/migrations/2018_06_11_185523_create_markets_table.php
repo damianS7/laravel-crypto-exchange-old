@@ -15,13 +15,13 @@ class CreateMarketsTable extends Migration
     {
         Schema::create('markets', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->unsignedInteger('trading_coin_id')->unique();
-            $table->unsignedInteger('market_coin_id')->unique();
+            $table->unsignedInteger('traded_coin_id');
+            $table->unsignedInteger('market_coin_id');
             $table->enum('status', ['suspended', 'resumed'])->default('suspended');
             $table->boolean('visible')->default(false);
-            $table->foreign('trading_coin_id')->references('id')->on('coins')->onDelete('cascade');
+            $table->foreign('traded_coin_id')->references('id')->on('coins')->onDelete('cascade');
             $table->foreign('market_coin_id')->references('id')->on('coins')->onDelete('cascade');
-            $table->unique(array('trading_coin_id', 'market_coin_id'));
+            $table->unique(array('traded_coin_id', 'market_coin_id'));
         });
     }
 

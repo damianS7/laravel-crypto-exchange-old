@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Models\Coin;
-use App\Http\Models\Market;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -49,29 +48,24 @@ class DatabaseSeeder extends Seeder
                 ],
             ]);
 
-            DB::table('markets')->insert([
-                'coin_id' => Coin::where('symbol', 'USDT')->first()->id,
-            ]);
-
             $btc = Coin::where('symbol', 'BTC')->first();
             $usdt = Coin::where('symbol', 'USDT')->first();
-            $market = Market::where('coin_id', $usdt->id)->first();
 
-            DB::table('pairs')->insert([
-                'coin_id' => $btc->id,
-                'market_id' => $market->id,
+            DB::table('markets')->insert([
+                'traded_coin_id' => $btc->id,
+                'market_coin_id' => $usdt->id,
             ]);
+
         } catch (Illuminate\Database\QueryException $e) {
 
         }
 
         //factory('App\User', 3)->create();
-        //factory('App\Http\Models\Coin', 100)->create();
-        //factory('App\Http\Models\Market', 5)->create();
-        //factory('App\Http\Models\Pair', 10)->create();
-        //factory('App\Http\Models\Wallet', 200)->create();
-        //factory('App\Http\Models\Deposit', 400)->create();
-        //factory('App\Http\Models\Order', 8000)->create();
-        factory('App\Http\Models\OrderHistory', 10)->create();
+        factory('App\Http\Models\Coin', 10)->create();
+        factory('App\Http\Models\Market', 5)->create();
+        factory('App\Http\Models\Wallet', 100)->create();
+        factory('App\Http\Models\Deposit', 40)->create();
+        factory('App\Http\Models\Order', 5)->create();
+        factory('App\Http\Models\OrderHistory', 4)->create();
     }
 }
