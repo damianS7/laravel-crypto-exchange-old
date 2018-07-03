@@ -21,7 +21,7 @@ Route::get('/trade/ajax/update', 'TradeController@ajaxUpdateView');
 
 Route::get('/trade/theme{theme?}', 'TradeController@changeTheme')->name('change-theme');
 Route::redirect('/trade/', '/trade/BTC-USDT', 302);
-Route::get('/trade/{pair?}', 'TradeController@index')->name('trade');
+Route::get('/trade/{market?}', 'TradeController@index')->name('trade');
 
 // Admin routes
 Route::get('/admin/', 'Admin\SettingsController@index')->name('admin');

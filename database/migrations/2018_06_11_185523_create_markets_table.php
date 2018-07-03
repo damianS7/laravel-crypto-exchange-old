@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMarketsTable extends Migration
 {
@@ -15,9 +15,13 @@ class CreateMarketsTable extends Migration
     {
         Schema::create('markets', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->unsignedInteger('coin_id')->unique();
-            $table->boolean('market_open')->default(false);
-            $table->foreign('coin_id')->references('id')->on('coins')->onDelete('cascade');
+            $table->unsignedInteger('trading_coin_id')->unique();
+            $table->unsignedInteger('market_coin_id')->unique();
+            $table->enum('status', ['suspended', 'resumed'])->default('suspended');
+            $table->boolean('visible')->default(false);
+            $table->foreign('trading_coin_id')->references('id')->on('coins')->onDelete('cascade');
+            $table->foreign('market_coin_id')->references('id')->on('coins')->onDelete('cascade');
+            $table->unique(array('trading_coin_id', 'market_coin_id'));
         });
     }
 
