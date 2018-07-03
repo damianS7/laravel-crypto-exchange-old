@@ -38,19 +38,23 @@
   </div>
   <!-- <p>&nbsp;</p> -->
   <div class="container-fluid">
-
     <div id="row1" class="row">
       <div id="market-menu-container" class="col-sm-2">
-        @include('exchange.marketsMenu')
+        @include('exchange.markets_menu')
       </div>
       <div id="price-history-container" class="col-sm-4">
-        include('exchange.priceHistory') MARKET DEPTH
+        <div class='row'>
+          include('exchange.chart_price')
+        </div>
+        <div class='row'>
+          @include('exchange.chart_depth')
+        </div>
       </div>
       <div id="order-book-container" class="col-sm-3">
-        @include('exchange.orderBook')
+        @include('exchange.order_book')
       </div>
       <div id="market-history-container" class="col-sm-3">
-        @include('exchange.marketHistory')
+        @include('exchange.market_history')
       </div>
     </div>
 
@@ -61,7 +65,7 @@
       </div>
 
       <div id="order-form-container" class="col-sm-6">
-        @include('exchange.orderForm')
+        @include('exchange.order_form')
       </div>
     </div>
   </div>
