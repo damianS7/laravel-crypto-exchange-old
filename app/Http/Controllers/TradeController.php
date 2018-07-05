@@ -122,7 +122,6 @@ class TradeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function ajaxUpdateView(Request $request)
     {
         $market_history_last_id = $request->last_market_history_id;
@@ -174,11 +173,12 @@ class TradeController extends Controller
 
     private function getMarkets()
     {
-        //SELECT t1.id,(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as currency_symbol, t1.traded_coin_id, t2.symbol as market_symbol, t1.market_coin_id, t1.status, t1.visible FROM `markets` t1 INNER JOIN coins t2 ON t1.market_coin_id = t2.id ORDER BY market_symbol ASC
+        //SELECT t1.id,(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as currency_symbol, t1.traded_coin_id, t2.symbol as market_symbol, t1.market_coin_id, t1.status, t1.visible, ROUND(t3.price,3) as price FROM `markets` t1 INNER JOIN coins t2 ON t1.market_coin_id = t2.id LEFT JOIN market_stats t3 ON t3.market_id = t1.id ORDER BY market_symbol ASC
 
-        $sql = Market::select('t1.id', DB::raw('(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as coin_symbol'), 't1.traded_coin_id', 't2.symbol as market_symbol', 't1.market_coin_id', 't1.status', 't1.visible')
+        $sql = Market::select('t1.id', DB::raw('(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as coin_symbol'), 't1.traded_coin_id', 't2.symbol as market_symbol', 't1.market_coin_id', 't1.status', 't1.visible', 't3.price', DB::raw('ROUND(t3.volume24h, 3) as volume24h'))
             ->from('markets as t1')
             ->join('coins as t2', 't1.market_coin_id', 't2.id')
+            ->leftJoin('market_stats as t3', 't1.id', 't3.market_id')
             ->orderBy('market_symbol', 'ASC')
             ->orderBy('coin_symbol', 'ASC');
 
@@ -353,7 +353,6 @@ class TradeController extends Controller
 
         // Array names
         $names = array('order_book', 'settings', 'market_history', 'markets', 'user_orders', 'user_history', 'pair', 'balance', 'coin1', 'coin2', 'market');
-
         return view('exchange/trade')->with(compact($names));
     }
 

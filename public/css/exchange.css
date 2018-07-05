@@ -14,6 +14,20 @@
 .clickable {
   cursor: pointer;
 }
+#main-menu {
+  margin-bottom: 5px;
+}
+
+#chat_view p {
+  margin: 0;
+}
+#chat_view {
+  overflow-y: scroll;
+  width: 100%;
+  min-height: 200px;
+  max-height: 200px;
+  border: 1px solid grey
+}
 
 .tradingview-widget-container,
 #tradingview_3ebbc {
@@ -45,18 +59,40 @@
 }
 
 #market_menu_tabs .nav-link {
-  padding: 0
+  padding: 1px 2px;
+  border-radius: 0;
+  font-size: 0.95em;
+  outline: 0;
 }
 
-#market_menu_tabs {
-  font-size: 0.65em
-}
 
 /* TABLE STYLES */
+
+#markets_menu table a {
+  outline: 0;
+}
+#markets_menu table {
+  font-size: 0.65em
+}
 
 #markets_menu table>tbody {
   max-height: 450px;
 }
+
+
+#markets_menu table th[name=market],
+#markets_menu table td[name=market],
+#markets_menu table th[name=change],
+#markets_menu table td[name=change] {
+  width: 20%
+}
+#markets_menu table th[name=price],
+#markets_menu table td[name=price],
+#markets_menu table th[name=volume],
+#markets_menu table td[name=volume] {
+  width: 30%
+}
+
 
 #order-book>table td span {
   position: relative;
@@ -75,7 +111,7 @@
 #user-history>table td[name=price],
 #user-history>table th[name=amount],
 #user-history>table td[name=amount] {
-  width: 35%
+  width: 25%
 }
 
 #user-history>table th[name=type],
@@ -83,7 +119,6 @@
   width: 10%
 }
 
-#markets_menu>table,
 #order-book>table,
 #market-history>table {
   font-size: 0.65em;
@@ -157,7 +192,8 @@ tbody tr {
 }
 
 thead {
-  width: calc( 100% - 1em)
+  /*width: calc( 100% - 1em)*/
+  width: 100%;
 }
 
 /* TABLE STYLES */
