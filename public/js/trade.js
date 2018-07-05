@@ -6,7 +6,13 @@ $(document).ready(function () {
   setInterval(function () {
     updateView();
   }, 1000);
+  // Select first tab on markets when load
+  $('.nav-tabs .nav-item a').first().addClass('active show');
+  $('.tab-pane').first().addClass('active show');
 
+  $('#market_menu_tabs').on('keyup', '#search_coin', function () {
+    searchFilter();
+  });
   // User event when removing an open order
   $('#table-user-orders').on('click', '.cancel-order-button', function () {
     removeOrder($(this));
@@ -72,6 +78,29 @@ $(document).ready(function () {
     }
   });
 });
+
+function searchFilter() {
+  // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("search_coin");
+  filter = input.value.toUpperCase();
+  //table = $('.tab-pane.active.show > table');//document.getElementById("myTable");
+  table = document.querySelector(".tab-pane.active.show>table");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      tdText = td.querySelector("a").innerHTML;
+      if (tdText.toUpperCase().startsWith(filter)) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
 
 // Delete an order
 function removeOrder(button) {
@@ -234,7 +263,7 @@ function updateOrderBook(data) {
   }
 
   // Bug row duplicated on mass add
-  $('#table-order-book tbody').each(function (index) {;
+  $('#table-order-book tbody').each(function (index) {
     var book = $(this).attr('data-key-name');
 
     // If the array is empty there is nothing to do ...

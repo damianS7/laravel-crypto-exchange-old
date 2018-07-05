@@ -61,7 +61,7 @@
 
     <div id="row2" class="row">
       <div id="user-orders-container" class="col-sm-6">
-        @include('exchange.tab')
+        @include('exchange.user_panel_tab')
       </div>
 
       <div id="order-form-container" class="col-sm-6">
@@ -73,3 +73,6 @@
 </body>
 
 </html>
+<pre>
+  print_r($markets)
+</pre>

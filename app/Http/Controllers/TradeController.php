@@ -172,6 +172,20 @@ class TradeController extends Controller
         return Order::where('user_id', $user_id)->where('market_id', $market_id)->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->limit(50)->get();
     }
 
+    private function getMarkets()
+    {
+        //SELECT t1.id,(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as currency_symbol, t1.traded_coin_id, t2.symbol as market_symbol, t1.market_coin_id, t1.status, t1.visible FROM `markets` t1 INNER JOIN coins t2 ON t1.market_coin_id = t2.id ORDER BY market_symbol ASC
+
+        $sql = Market::select('t1.id', DB::raw('(SELECT subt1.symbol FROM coins subt1 WHERE subt1.id = t1.traded_coin_id) as coin_symbol'), 't1.traded_coin_id', 't2.symbol as market_symbol', 't1.market_coin_id', 't1.status', 't1.visible')
+            ->from('markets as t1')
+            ->join('coins as t2', 't1.market_coin_id', 't2.id')
+            ->orderBy('market_symbol', 'ASC')
+            ->orderBy('coin_symbol', 'ASC');
+
+        return $sql->get()->groupBy('market_symbol');
+
+    }
+
     private function getUserHistory($user_id, $market_id, $last_id = null)
     {
         if ($user_id === null) {
@@ -321,9 +335,7 @@ class TradeController extends Controller
         $settings = Setting::all()->keyBy('name');
 
         // Trade markets (which constains also pairs)
-        $markets = Market::select('markets.*', 'coins.symbol')
-            ->join('coins', 'markets.market_coin_id', '=', 'coins.id')
-            ->get()->keyBy('symbol');
+        $markets = $this->getMarkets();
 
         // User trade history for the actual coin he is trading
         $user_history = $this->getUserHistory($user_id, $market->id);

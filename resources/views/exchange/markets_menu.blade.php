@@ -1,78 +1,43 @@
-<div id="markets">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">BTC</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">ETH</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">BTX</a>
-        </li>
-        <li class="nav-item">
-            <input id="search_coin" class="form-control form-control-sm" aria-label="" type="text" value="" placeholder="Search a coin" onClick="doSearch()">
-        </li>
-    </ul>
-
-    <div id="market-menu" class="">
-        <table id="table-market-menu" class="table table-striped table-responsive table-borderless">
-            <colgroup>
-                <col style="width: 30%">
-                <col style="width: 30%">
-                <col style="width: 40%">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th class="text-left" scope="col">Price</th>
-                    <th class="text-left" scope="col">Amount</th>
-                    <th class="text-right" scope="col">Filled</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($markets as $market)
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                <tr data-id="{{ $market->id }}">
-                    <td class="text-left {{ $market->symbol }}-price">{{ $market->symbol }}</td>
-                    <td class="text-left amount">{{ $market->symbol }}</td>
-                    <td class="text-right date">{{ $market->symbol }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+<div id="market_menu_tabs" class="tabbable">
+  <ul class="nav nav-tabs" id="market_menu_tabs" role="tablist">
+    @foreach ($markets as $market_symbol => $marketList)
+    <li class="nav-item">
+      <a class="nav-link" href="#tab-{{ $market_symbol }}" data-toggle="tab">{{ $market_symbol }}</a>
+    </li>
+    @endforeach
+    <li class="nav-item">
+      <input id="search_coin" class=" form-control form-control-sm " type="text" placeholder="Search">
+    </li>
+  </ul>
+  <div id="markets_menu" class="tab-content ">
+    @foreach ($markets as $market_symbol => $marketList)
+    <div class="tab-pane" id="tab-{{ $market_symbol }}">
+      <table id="table-{{ $market_symbol }}" class="table table-striped table-responsive table-borderless table-market ">
+        <colgroup>
+          <col style="width: 30% ">
+          <col style="width: 30% ">
+          <col style="width: 40% ">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="text-left " scope="col ">Symbol</th>
+            <th class="text-left " scope="col ">Price</th>
+            <th class="text-right " scope="col ">Volume(24h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($marketList as $market)
+          <tr data-id="{{ $market->id }}">
+            <td class="text-left coin-{{ $market->coin_symbol }}">
+              <a href="{{ route('trade', $market->coin_symbol . '-'. $market_symbol) }}">{{ $market->coin_symbol }}</a>
+            </td>
+            <td class="text-left amount">{{ $market->id }}</td>
+            <td class="text-right date">{{ $market->id }}</td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
     </div>
-
+    @endforeach
+  </div>
 </div>
