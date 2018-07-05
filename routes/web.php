@@ -18,6 +18,8 @@ Route::get('/home', 'HomeController@index');
 Route::post('/trade/ajax/order/add', 'TradeController@ajaxAddOrder');
 Route::post('/trade/ajax/order/delete', 'TradeController@ajaxDeleteOrder');
 Route::get('/trade/ajax/update', 'TradeController@ajaxUpdateView');
+Route::post('/trade/ajax/chat', 'ChatController@ajaxPostMessage');
+Route::get('/trade/ajax/chat', 'ChatController@ajaxGetLastMessages');
 
 Route::get('/trade/theme{theme?}', 'TradeController@changeTheme')->name('change-theme');
 Route::redirect('/trade/', '/trade/BTC-USDT', 302);
