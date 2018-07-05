@@ -70,9 +70,8 @@
     </div>
   </div>
   <script src="{{ asset('js/trade.js') }}"></script>
+  <script src="{{ asset('js/chat.js') }}"></script>
+  <script src="{{ asset('js/menu_markets.js') }}"></script>
 </body>
 
 </html>
-<pre>
-  print_r($markets)
-</pre>
