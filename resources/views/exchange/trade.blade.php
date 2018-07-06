@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BitEx | @yield('title') {{ $coin1->symbol }}{{ $coin2->symbol }} </title>
+  <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
   <link href="{{ asset('css/common.css') }}" rel="stylesheet">
