@@ -131,7 +131,7 @@ function addOrder(type) {
   };
 
   ajax('/order/add', 'post', payload, function (response) {
-    //console.log(response);
+    console.log(response);
     if (response.status == 'error') {
       toastr.error(response.message);
     } else if (response.status == 'ok') {
@@ -374,6 +374,13 @@ function updateOrderBook(data) {
   });
 }
 
+function updateBalances(balances) {
+  buy_symbol = $('#btn-buy').attr('data-symbol');
+  sell_symbol = $('#btn-sell').attr('data-symbol');
+  $('#buy-balance').html(balances[buy_symbol].avaliable);
+  $('#sell-balance').html(balances[sell_symbol].avaliable);
+}
+
 function updateView() {
   var payload = {
     'last_user_orders_id': $('#table-user-orders > tbody > tr:first').attr('data-id'),
@@ -391,6 +398,7 @@ function updateView() {
     updateOrderBook(response.data['order_book']);
     updateUserOpenOrders(response.data['user_orders']);
     updateUserOrderHistory(response.data['user_history']);
+    updateBalances(response.data['balances']);
   });
 }
 

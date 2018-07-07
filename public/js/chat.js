@@ -25,7 +25,6 @@ function updateChat() {
 
     }
 
-    console.log(response);
     var html = '';
 
     if (response.status == 'ok') {
