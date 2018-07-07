@@ -61,11 +61,13 @@ class DatabaseSeeder extends Seeder
         }
 
         //factory('App\User', 3)->create();
-        factory('App\Http\Models\Coin', 10)->create();
-        factory('App\Http\Models\Market', 5)->create();
-        factory('App\Http\Models\Wallet', 100)->create();
-        factory('App\Http\Models\Deposit', 40)->create();
-        factory('App\Http\Models\Order', 5)->create();
-        factory('App\Http\Models\OrderHistory', 4)->create();
+        //factory('App\Http\Models\Coin', 10)->create();
+        //factory('App\Http\Models\Market', 5)->create();
+        //factory('App\Http\Models\Wallet', 100)->create();
+        //factory('App\Http\Models\Deposit', 40)->create();
+        //factory('App\Http\Models\Order', 5)->create();
+        //factory('App\Http\Models\OrderHistory', 4)->create();
+        factory('App\Http\Models\ChatMessage', 5)->create();
+
     }
 }

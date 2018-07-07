@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Models\ChatMessage;
 use App\Http\Models\Coin;
 use App\Http\Models\Deposit;
 use App\Http\Models\Market;
@@ -114,5 +115,12 @@ $factory->define(OrderHistory::class, function (Faker $faker) {
         'amount' => $faker->randomFloat(8, 5000, 10000),
         'type' => $faker->randomElement(['buy', 'sell']),
         'filled_at' => date('Y-m-d H:i:s'),
+    ];
+});
+
+$factory->define(ChatMessage::class, function (Faker $faker) {
+    return [
+        'user_id' => 1,
+        'message' => str_random(15),
     ];
 });
