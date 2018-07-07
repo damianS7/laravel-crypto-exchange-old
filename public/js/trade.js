@@ -375,6 +375,10 @@ function updateOrderBook(data) {
 }
 
 function updateBalances(balances) {
+  if (!Array.isArray(balances) || !balances.length) {
+    return;
+  }
+
   buy_symbol = $('#btn-buy').attr('data-symbol');
   sell_symbol = $('#btn-sell').attr('data-symbol');
   $('#buy-balance').html(balances[buy_symbol].avaliable);
@@ -393,7 +397,7 @@ function updateView() {
     if (response.status == 'error') {
       return;
     }
-
+    //console.log(response);
     updateMarketHistory(response.data['market_history']);
     updateOrderBook(response.data['order_book']);
     updateUserOpenOrders(response.data['user_orders']);
